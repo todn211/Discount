@@ -23,6 +23,12 @@ public class GoodsSelectedActivity extends Activity {
 		lvGoodsSelected = (ListView) this.findViewById(R.id.lvGoodsSelected);
 	}
 	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		this.overridePendingTransition(0,R.anim.out_from_top);
+	}
+	
 	public void close(View view){
 		this.setResult(1);
 		this.finish();

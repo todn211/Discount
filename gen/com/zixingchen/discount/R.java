@@ -115,13 +115,14 @@ containing a value of this type.
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f070002;
+        public static final int AppBaseTheme=0x7f070003;
         /**  Application theme. 
          */
         public static final int AppTheme=0x7f070000;
         /**  <item name="android:background">@drawable/corners_button</item> 
          */
         public static final int cornersButton=0x7f070001;
+        public static final int noAnimation=0x7f070002;
     }
     public static final class styleable {
         /**  公共属性 

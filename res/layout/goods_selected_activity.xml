@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".GoodsSelectedActivity">
+    tools:context=".GoodsSelectedActivity"
+    android:background="@drawable/goods_selected_bg">
 
     <!-- 工具条 -->
     <LinearLayout

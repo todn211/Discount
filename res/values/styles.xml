@@ -3,21 +3,26 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="android:Theme.Light.NoTitleBar">
         <item name="android:buttonStyle">@style/cornersButton</item>
+        <item name="android:windowAnimationStyle">@style/noAnimation</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="cornersButton" parent="android:Widget.Button">
         <!-- <item name="android:background">@drawable/corners_button</item> -->
     </style>
     
-    <!-- 主页面下工具条按钮样式
-    <style name="mainBottomBar">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:button">@null</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:textStyle">bold</item>
-    </style> -->
+    <style name="noAnimation">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <item name="android:activityCloseExitAnimation">@null</item>
+        <item name="android:taskOpenEnterAnimation">@null</item>
+        <item name="android:taskOpenExitAnimation">@null</item>
+        <item name="android:taskCloseEnterAnimation">@null</item>
+        <item name="android:taskCloseExitAnimation">@null</item>
+        <item name="android:taskToFrontEnterAnimation">@null</item>
+        <item name="android:taskToFrontExitAnimation">@null</item>
+        <item name="android:taskToBackEnterAnimation">@null</item>
+        <item name="android:taskToBackExitAnimation">@null</item>
+    </style>
 </resources>
