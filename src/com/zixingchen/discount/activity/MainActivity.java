@@ -35,7 +35,7 @@ public class MainActivity extends Activity{
 		this.setContentView(R.layout.main_activity);
 		
 		//初始化关注列表 
-		initlvMyAttention();
+		initLvMyAttention();
 		
 		btRefresh = (Button) this.findViewById(R.id.btRefresh);
 		btAdd = (Button) this.findViewById(R.id.btAdd);
@@ -72,7 +72,7 @@ public class MainActivity extends Activity{
 	/**
 	 * 初始化关注列表
 	 */
-	private void initlvMyAttention(){
+	private void initLvMyAttention(){
 		lvMyAttention = (ExpandableListView)this.findViewById(R.id.lvMyAttention);
 		
 		//初始化商品类型集合数据
