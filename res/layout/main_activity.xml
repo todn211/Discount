@@ -1,0 +1,62 @@
+<!-- 全软件主页 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <!-- 工具条 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/toolbar_bg"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_button"
+            android:text="@string/refresh"
+            android:onClick="onBtRefreshClick"/>
+        
+        <TextView 
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/myAttention"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_weight="100"
+            android:gravity="center_horizontal"
+            />
+
+        <Button
+            android:id="@+id/btAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_button"
+            android:text="@string/addAttention" 
+            android:onClick="onBtnAddClick"/>
+    </LinearLayout>
+
+    <!-- 主内容区域 -->
+   <!--  <ListView
+        android:id="@+id/lvMyAttention"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null" /> -->
+    
+    <ExpandableListView 
+        android:id="@+id/lvMyAttention"
+        android:divider="#CBCBCB"
+        android:dividerHeight="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:groupIndicator="@drawable/lv_group_arrow"
+        />
+</LinearLayout>

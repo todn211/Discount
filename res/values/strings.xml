@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">折宝</string>
+    <string name="myAttention">我的关注</string>
+    <string name="allGoodsType">全部商品类型</string>
+    <string name="systemSetting">系统设置</string>
+    <string name="imgContentDescript">图片说明</string>
+    <string name="addAttention">添加</string>
+    <string name="refresh">刷新</string>
+    <string name="more">更多</string>
+    <string name="title_activity_goods_selected">GoodsSelectedActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="close">关闭</string>
+    <string name="selecteGoods">选择关注</string>
+
+</resources>
