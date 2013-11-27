@@ -27,7 +27,7 @@ public class MainActivity extends Activity{
 	private List<Goods> goodsTypes;//关注的商品类型集合
 	private List<List<Goods>> goodses;//关注的商品集合
 	private Button btRefresh;//刷新
-	private Button btAdd;//添加关注
+	private Button btAdd;//添加关注 
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
