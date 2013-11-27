@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity" >
+    tools:context=".MainActivity">
 
     <!-- 工具条 -->
     <LinearLayout
@@ -58,5 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:groupIndicator="@drawable/lv_group_arrow"
+        android:background="@drawable/goods_selected_bg"
+        android:cacheColorHint="#00000000"
         />
 </LinearLayout>

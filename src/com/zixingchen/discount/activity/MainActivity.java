@@ -39,6 +39,7 @@ public class MainActivity extends Activity{
 		
 		btRefresh = (Button) this.findViewById(R.id.btRefresh);
 		btAdd = (Button) this.findViewById(R.id.btAdd);
+		getWindow().setWindowAnimations(0);
 	}
 	/**
 	 * 刷新关注的列表
@@ -55,7 +56,7 @@ public class MainActivity extends Activity{
 	public void onBtnAddClick(View view){
 		Intent intent = new Intent(this,GoodsSelectedActivity.class);
 		this.startActivityForResult(intent, 0);
-		this.overridePendingTransition(R.anim.in_from_right,R.anim.no_anim);
+		this.overridePendingTransition(R.anim.in_from_bottom,R.anim.no_anim);
 	}
 	
 	/**
