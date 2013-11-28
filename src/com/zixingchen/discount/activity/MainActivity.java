@@ -53,20 +53,12 @@ public class MainActivity extends Activity{
 	 * 跳转到添加商品关注的界面
 	 * @param view
 	 */
-	public void onBtnAddClick(View view){
+	public void onBtAddClick(View view){
 		Intent intent = new Intent(this,GoodsSelectedActivity.class);
-		this.startActivityForResult(intent, 0);
+		intent.putExtra("prevActivityIsMain", true);
+		this.startActivity(intent);
+//		this.startActivityFromChild(child, intent, requestCode);ActivityOptions
 		this.overridePendingTransition(R.anim.in_from_bottom,R.anim.no_anim);
-	}
-	
-	/**
-	 * 关闭返回事件
-	 */
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		
-		System.out.println(requestCode);
 	}
 	
 	/**

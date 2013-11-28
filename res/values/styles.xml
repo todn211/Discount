@@ -2,13 +2,12 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="android:Theme.Light.NoTitleBar">
-        <item name="android:buttonStyle">@style/cornersButton</item>
         <item name="android:windowAnimationStyle">@style/noAnimation</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="cornersButton" parent="android:Widget.Button">
-        <!-- <item name="android:background">@drawable/corners_button</item> -->
+    <style name="cornersButton">
+        <item name="android:background">@drawable/corners_button</item>
     </style>
     
     <style name="noAnimation">

@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".GoodsSelectedActivity"
-    android:background="@drawable/goods_selected_bg">
+    android:background="@drawable/goods_selected_bg"
+    android:id="@+id/goodsSelectedContainer">
 
     <!-- 工具条 -->
     <LinearLayout
@@ -17,29 +18,31 @@
         android:gravity="center_vertical">
 
         <Button
+            android:id="@+id/btLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/corners_button"
+            style="@style/cornersButton"
             android:text="@string/close"
             android:onClick="close"/>
         
         <TextView 
+            android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="100"
             android:gravity="center_horizontal"
-            android:text="@string/selecteGoods"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="16sp"
             />
 
         <Button
+            android:id="@+id/btHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
              android:background="@drawable/corners_button"
-            android:text="@string/addAttention" 
-            android:visibility="invisible"/>
+            android:text="@string/home"
+            android:onClick="goToHome"/>
     </LinearLayout>
     
     <ListView

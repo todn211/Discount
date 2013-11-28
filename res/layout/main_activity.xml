@@ -20,7 +20,7 @@
             android:id="@+id/btRefresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/corners_button"
+            style="@style/cornersButton"
             android:text="@string/refresh"
             android:onClick="onBtRefreshClick"/>
         
@@ -39,9 +39,9 @@
             android:id="@+id/btAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/corners_button"
+            style="@style/cornersButton"
             android:text="@string/addAttention" 
-            android:onClick="onBtnAddClick"/>
+            android:onClick="onBtAddClick"/>
     </LinearLayout>
 
     <!-- 主内容区域 -->
