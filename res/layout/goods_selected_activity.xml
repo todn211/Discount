@@ -21,7 +21,7 @@
             android:id="@+id/btLeft"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/cornersButton"
+            style="@style/toolbarBackButton"
             android:text="@string/close"
             android:onClick="close"/>
         
@@ -40,7 +40,7 @@
             android:id="@+id/btHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             android:background="@drawable/corners_button"
+             android:background="@drawable/corners_button_selector"
             android:text="@string/home"
             android:onClick="goToHome"/>
     </LinearLayout>
