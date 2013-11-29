@@ -40,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/cornersButton"
+            android:drawableLeft="@android:drawable/ic_menu_add"
             android:text="@string/addAttention" 
             android:onClick="onBtAddClick"/>
     </LinearLayout>

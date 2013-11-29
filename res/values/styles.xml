@@ -9,6 +9,7 @@
     <!-- 圆角按钮 -->
     <style name="cornersButton">
         <item name="android:background">@drawable/corners_button_selector</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
     
     <!-- 工具条向左导航按钮 -->
