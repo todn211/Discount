@@ -17,15 +17,16 @@ import android.widget.TextView;
 
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.model.Goods;
+import com.zixingchen.discount.model.GoodsType;
 
 /**
  * 选择关注商品类
  * @author 陈梓星
  */
-public class GoodsTypeSelectedActivity extends Activity implements OnItemClickListener{
+public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 
-	private ListView lvGoodsSelected;//商品选择列表，选择要关注的商品
-	private List<Goods> goodses;//商品类型（或者商品）集合
+	private ListView lvGoodsType;//商品选择列表，选择要关注的商品
+	private List<GoodsType> goodsTypes;//商品类型（或者商品）集合
 	private boolean prevActivityIsMain;//上一个Activity是否为MainActivity，true时为是。
 	private TextView tvTitle;//窗口标题
 	private Button btLeft;//工具栏左边按钮
@@ -34,7 +35,7 @@ public class GoodsTypeSelectedActivity extends Activity implements OnItemClickLi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.goods_type_selected_activity);
+		setContentView(R.layout.goods_type_activity);
 		
 		prevActivityIsMain = this.getIntent().getBooleanExtra("prevActivityIsMain", false);
 		
@@ -42,7 +43,7 @@ public class GoodsTypeSelectedActivity extends Activity implements OnItemClickLi
 		initToolbar();
 		
 		//初始化商品类型集合数据
-		initLvGoodsSelected();
+		initLvGoodsType();
 	}
 	
 	/**
@@ -60,7 +61,7 @@ public class GoodsTypeSelectedActivity extends Activity implements OnItemClickLi
 		if(prevActivityIsMain){
 			btLeft.setVisibility(View.INVISIBLE);
 		}else{
-			btLeft.setText("返回");
+//			btLeft.setText(this.getResources().getString(r.s));
 			btLeft.setVisibility(View.VISIBLE);
 		}
 	}
@@ -68,23 +69,23 @@ public class GoodsTypeSelectedActivity extends Activity implements OnItemClickLi
 	/**
 	 * 初始化商品类型集合数据
 	 */
-	private void initLvGoodsSelected(){
-		lvGoodsSelected = (ListView) this.findViewById(R.id.lvGoodsSelected);
+	private void initLvGoodsType(){
+		lvGoodsType = (ListView) this.findViewById(R.id.lvGoodsType);
 		
-		if(goodses == null || goodses.size() == 0){
-			goodses = new ArrayList<Goods>();
+		if(goodsTypes == null || goodsTypes.size() == 0){
+			goodsTypes = new ArrayList<GoodsType>();
 			
 			for (int i = 1; i <= 10; i++) {
-				Goods goods = new Goods();
-				goods.setId(i);
-				goods.setName("商品类型" + i);
-				goodses.add(goods);
+				GoodsType goodsType = new Goods();
+				goodsType.setId(i);
+				goodsType.setName("商品类型" + i);
+				goodsTypes.add(goodsType);
 			}
 		}
 		
-		lvGoodsSelected.setAdapter(new LvGoodsSelectedAdapater());
+		lvGoodsType.setAdapter(new LvGoodsTypeSelectedAdapater());
 		
-		lvGoodsSelected.setOnItemClickListener(this);
+		lvGoodsType.setOnItemClickListener(this);
 	}
 	
 	/**
@@ -92,8 +93,17 @@ public class GoodsTypeSelectedActivity extends Activity implements OnItemClickLi
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Intent intent = new Intent(this,GoodsTypeSelectedActivity.class);
-		intent.putExtra("title", goodses.get(position).getName());
+		GoodsType goodsType = goodsTypes.get(position);
+		goodsType.setLeaf(true);
+		Intent intent = null;
+		//如果商品类型是最后一级，就切换到商品页面，否则依然在商品类型页面切换
+		if(goodsType.isLeaf()){
+			intent = new Intent(this,GoodsItemActivity.class);
+		}else{
+			intent = new Intent(this,GoodsTypeActivity.class);
+		}
+		
+		intent.putExtra("title", goodsTypes.get(position).getName());
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}
@@ -145,19 +155,19 @@ public class GoodsTypeSelectedActivity extends Activity implements OnItemClickLi
 	}
 	
 	/**
-	 * 商品列表适配器
+	 * 商品类型列表适配器
 	 * @author 陈梓星
 	 */
-	private class LvGoodsSelectedAdapater extends BaseAdapter{
+	private class LvGoodsTypeSelectedAdapater extends BaseAdapter{
 
 		@Override
 		public int getCount() {
-			return goodses.size();
+			return goodsTypes.size();
 		}
 
 		@Override
 		public Object getItem(int i) {
-			return goodses.get(i);
+			return goodsTypes.get(i);
 		}
 
 		@Override
@@ -168,12 +178,12 @@ public class GoodsTypeSelectedActivity extends Activity implements OnItemClickLi
 		@Override
 		public View getView(int i, View view, ViewGroup viewgroup) {
 			if(view == null)
-				view = GoodsTypeSelectedActivity.this
+				view = GoodsTypeActivity.this
 											.getLayoutInflater()
 											.inflate(R.layout.lv_goods_type_item, viewgroup, false);
 			
 			TextView tvName = (TextView) view.findViewById(R.id.tvName);
-			tvName.setText(goodses.get(i).getName());
+			tvName.setText(goodsTypes.get(i).getName());
 			return view;
 		}
 	}

@@ -54,7 +54,7 @@ public class MainActivity extends Activity{
 	 * @param view
 	 */
 	public void onBtAddClick(View view){
-		Intent intent = new Intent(this,GoodsSelectedActivity.class);
+		Intent intent = new Intent(this,GoodsTypeActivity.class);
 		intent.putExtra("prevActivityIsMain", true);
 		this.startActivity(intent);
 //		this.startActivityFromChild(child, intent, requestCode);ActivityOptions

@@ -4,45 +4,26 @@ package com.zixingchen.discount.model;
  * 商品
  * @author 陈梓星
  */
-public class Goods {
+public class Goods extends GoodsType{
 	private int id;
-	private Goods parent;//所属分类
-	private String name;//商品名
-	private String subTitle;//商品子标签
+	private GoodsType goodsType;//所属分类
 	private float prePrice;//商品价格
 	private float currentPrice;//当前价格
-	private String icon;//商品图标
 	private String descript;//商品说明
 
 	public Goods() {
 	}
 	
 	public Goods(String name) {
-		this.name = name;
+		this.setName(name);
 	}
 
-	public String getName() {
-		return name;
+	public GoodsType getGoodsType() {
+		return goodsType;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Goods getParent() {
-		return parent;
-	}
-
-	public void setParent(Goods parent) {
-		this.parent = parent;
-	}
-
-	public String getSubTitle() {
-		return subTitle;
-	}
-
-	public void setSubTitle(String subTitle) {
-		this.subTitle = subTitle;
+	public void setGoodsType(GoodsType goodsType) {
+		this.goodsType = goodsType;
 	}
 
 	public float getPrePrice() {
@@ -59,14 +40,6 @@ public class Goods {
 
 	public void setCurrentPrice(float currentPrice) {
 		this.currentPrice = currentPrice;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
 	}
 
 	public String getDescript() {

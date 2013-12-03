@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".GoodsTypeSelectedActivity"
-    android:background="@drawable/goods_selected_bg"
+    tools:context=".GoodsItemActivity"
+    android:background="@drawable/goods_type_bg"
     android:id="@+id/goodsSelectedContainer">
 
     <!-- 工具条 -->
@@ -50,7 +50,7 @@
     </LinearLayout>
     
     <ListView
-        android:id="@+id/lvGoodsSelected"
+        android:id="@+id/lvGoodsType"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:cacheColorHint="#00000000"/>
