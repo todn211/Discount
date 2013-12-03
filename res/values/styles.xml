@@ -6,15 +6,16 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <!-- 圆角按钮 -->
+    <!-- 工具条圆角按钮 -->
     <style name="cornersButton">
         <item name="android:background">@drawable/corners_button_selector</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
     
-    <!-- 工具条向左导航按钮 -->
-    <style name="toolbarBackButton">
-        <item name="android:background">@drawable/toolbar_back_button_selector</item>
+    <!-- 圆角按钮橙色 -->
+    <style name="cornersButtonOri">
+        <item name="android:background">@drawable/corners_button_ori_selector</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
     
     <style name="noAnimation">
