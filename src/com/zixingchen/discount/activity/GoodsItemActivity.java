@@ -59,6 +59,13 @@ public class GoodsItemActivity extends Activity {
 	}
 	
 	/**
+	 * 关注商品
+	 */
+	public void attentionGoods(View view){
+		System.out.println("************");
+	}
+	
+	/**
 	 * 返回物理键点击监听器
 	 */
 	@Override
@@ -131,7 +138,7 @@ public class GoodsItemActivity extends Activity {
 			
 			Goods goods = goodses.get(position);
 			tvName.setText(goods.getName());
-			tvPrice.setText(String.valueOf(goods.getCurrentPrice()));
+			tvPrice.setText("￥" + goods.getCurrentPrice());
 			
 //			Bitmap bm = BitmapFactory.decodeStream(is, outPadding, opts)
 //			ivGoodsIcon.setImageBitmap(bm);

@@ -16,5 +16,6 @@
     <string name="home">主页</string>
     <string name="title_activity_goods">GoodsActivity</string>
     <string name="back">返回</string>
+    <string name="attention">关注</string>
 
 </resources>

@@ -31,23 +31,14 @@
             android:layout_height="wrap_content"
             android:text="￥100.5" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:gravity="right" >
-
-            <Button
+        <Button
                 style="@style/cornersButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/addAttention" />
-
-            <Button
-                style="@style/cornersButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/addAttention" />
-        </LinearLayout>
+                android:text="@string/attention"
+                android:layout_gravity="right" 
+                android:layout_marginRight="10dp"
+                android:focusable="false"
+                android:onClick="attentionGoods"/>
     </LinearLayout>
 </LinearLayout>
