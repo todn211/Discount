@@ -170,7 +170,7 @@ public class GoodsSelectedActivity extends Activity implements OnItemClickListen
 			if(view == null)
 				view = GoodsSelectedActivity.this
 											.getLayoutInflater()
-											.inflate(R.layout.lv_goods_selected_item, viewgroup, false);
+											.inflate(R.layout.lv_goods_type_item, viewgroup, false);
 			
 			TextView tvName = (TextView) view.findViewById(R.id.tvName);
 			tvName.setText(goodses.get(i).getName());

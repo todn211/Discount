@@ -22,6 +22,8 @@
             android:layout_height="wrap_content"
             style="@style/cornersButton"
             android:text="@string/refresh"
+            android:drawableLeft="@drawable/refresh_icon"
+            android:drawablePadding="5dp"
             android:onClick="onBtRefreshClick"/>
         
         <TextView 
@@ -40,7 +42,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/cornersButton"
-            android:drawableLeft="@android:drawable/ic_menu_add"
+            android:drawableLeft="@drawable/add_icon"
+            android:drawablePadding="5dp"
             android:text="@string/addAttention" 
             android:onClick="onBtAddClick"/>
     </LinearLayout>
@@ -59,6 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:groupIndicator="@drawable/lv_group_arrow"
+        android:indicatorLeft="0dp"
         android:background="@drawable/main_bg"
         android:cacheColorHint="#00000000"
         />
