@@ -25,6 +25,7 @@
             android:drawableLeft="@drawable/refresh_icon"
             android:drawablePadding="5dp"
             android:onClick="onBtRefreshClick"/>
+            
         
         <TextView 
             android:layout_width="0dp"
