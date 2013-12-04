@@ -34,11 +34,12 @@
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 style="@style/cornersButtonOri"
+                style="@style/cornersButtonOrange"
                 android:layout_gravity="right" 
                 android:layout_marginRight="10dp"
                 android:focusable="false"
                 android:onClick="attentionGoods"
-                android:text="@string/attention"/>
+                android:text="@string/attention"
+                android:textSize="12sp"/>
     </LinearLayout>
 </LinearLayout>

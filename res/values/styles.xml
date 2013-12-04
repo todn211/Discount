@@ -13,8 +13,8 @@
     </style>
     
     <!-- 圆角按钮橙色 -->
-    <style name="cornersButtonOri">
-        <item name="android:background">@drawable/corners_button_ori_selector</item>
+    <style name="cornersButtonOrange">
+        <item name="android:background">@drawable/corners_button_orange_selector</item>
         <item name="android:textColor">#FFFFFF</item>
     </style>
     
