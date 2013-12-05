@@ -5,11 +5,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,7 +22,7 @@ import com.zixingchen.discount.model.Goods;
  * 商品项页面
  * @author 陈梓星
  */
-public class GoodsItemActivity extends Activity {
+public class GoodsItemActivity extends Activity implements OnItemClickListener{
 
 	private List<Goods> goodses;//商品集合 
 	private ListView lvGoodsItem;//商品列表
@@ -45,6 +45,7 @@ public class GoodsItemActivity extends Activity {
 	 */
 	private void initLvGoodsItem(){
 		lvGoodsItem = (ListView) this.findViewById(R.id.lvGoodsItem);
+		lvGoodsItem.setOnItemClickListener(this);
 		
 		//远程加载商品列表
 		goodses = new ArrayList<Goods>();
@@ -63,6 +64,14 @@ public class GoodsItemActivity extends Activity {
 	 */
 	public void attentionGoods(View view){
 		System.out.println("************");
+	}
+
+	/**
+	 * 切换到商品详细页面
+	 */
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		this.startActivity(new Intent(this,GoodsDeailActivity.class));
 	}
 	
 	/**

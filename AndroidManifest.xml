@@ -26,12 +26,20 @@
             </intent-filter>
         </activity>
 
-        <!-- 商品关注选择页面 -->
+        <!-- 商品类型展示页面 -->
         <activity
             android:name="com.zixingchen.discount.activity.GoodsTypeActivity"
             android:label="@string/title_activity_goods_selected" />
+        
+        <!-- 商品列表展示页面 -->
         <activity
             android:name="com.zixingchen.discount.activity.GoodsItemActivity"
+            android:label="@string/title_activity_goods" >
+        </activity>
+        
+        <!-- 商品详细信息展示页面 -->
+        <activity
+            android:name="com.zixingchen.discount.activity.GoodsDeailActivity"
             android:label="@string/title_activity_goods" >
         </activity>
     </application>
