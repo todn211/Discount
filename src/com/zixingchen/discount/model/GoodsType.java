@@ -1,12 +1,16 @@
 package com.zixingchen.discount.model;
 
+import java.io.Serializable;
+
 /**
  * 商品类型
  * @author 陈梓星
  */
-public class GoodsType {
-	private int id;
-	private Goods parent;//所属分类
+public class GoodsType implements Serializable{
+	private static final long serialVersionUID = 5689883900739188514L;
+	
+	private Long id;
+	private Long parentId;//所属分类ID
 	private String name;//类型名
 	private String subTitle;//类型子标签
 	private String icon;//商品图标
@@ -18,17 +22,17 @@ public class GoodsType {
 	public void setLeaf(boolean isLeaf) {
 		this.isLeaf = isLeaf;
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
-	public Goods getParent() {
-		return parent;
+	public Long getParentId() {
+		return parentId;
 	}
-	public void setParent(Goods parent) {
-		this.parent = parent;
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
 	}
 	public String getName() {
 		return name;

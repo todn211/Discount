@@ -17,6 +17,8 @@ import javax.crypto.spec.SecretKeySpec;
 import android.text.TextUtils;
 
 public abstract class TaobaoUtils {
+	public static final String URL = "http://gw.api.taobao.com/router/rest";
+	
 	private TaobaoUtils() {
 	}
 
@@ -157,18 +159,18 @@ public abstract class TaobaoUtils {
 		TreeMap<String, String> params = new TreeMap<String, String>();
 		params.put("timestamp", String.valueOf(System.currentTimeMillis()));
 		params.put("v", "2.0");
-		params.put("app_key", "21662468");
+		params.put("app_key", "21696545");
 		params.put("partner_id", "top-android-sdk");
 		params.put("format", "json");
 		if (!TextUtils.isEmpty(session)) {
 			params.put("session", session);
 		}
 		params.put("sign_method", "hmac");
-		params.put("method", "post");
+//		params.put("method", "post");
 		
 		params.putAll(parameters);
 		
-		String sign = signTopRequestNew(params, "957beaeb77dc79dc35c499b2d17534ea");
+		String sign = signTopRequestNew(params, "1d26655c651df01535676b0aaa120a8c");
 		params.put("sign", sign);
 		return params;
 	}

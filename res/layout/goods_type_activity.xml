@@ -24,7 +24,7 @@
             style="@style/cornersButton"
             android:drawableLeft="@drawable/back_icon"
             android:drawablePadding="5dp"
-            android:text="@string/close"
+            android:text="@string/back"
             android:onClick="close"/>
         
         <TextView 

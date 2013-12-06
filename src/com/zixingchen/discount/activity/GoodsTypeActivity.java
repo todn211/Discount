@@ -1,7 +1,12 @@
 package com.zixingchen.discount.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,9 +20,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.zixingchen.discount.R;
-import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
+import com.zixingchen.discount.utils.TaobaoUtils;
 
 /**
  * 选择关注商品类
@@ -30,6 +38,7 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 	private boolean prevActivityIsMain;//上一个Activity是否为MainActivity，true时为是。
 	private TextView tvTitle;//窗口标题
 	private Button btLeft;//工具栏左边按钮
+	private GoodsType parentGoodsType;//父级对象
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +62,8 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 		//初始化标题
 		tvTitle = (TextView) this.findViewById(R.id.tvTitle);
 		Intent intent = this.getIntent();
-		String title = intent.getStringExtra("title") == null ? "选择关注" : intent.getStringExtra("title");
+		parentGoodsType = (GoodsType) intent.getSerializableExtra("goodsType");
+		String title = parentGoodsType == null ? "选择关注" : parentGoodsType.getName();
 		tvTitle.setText(title);
 		
 		//初始化按钮
@@ -61,7 +71,7 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 		if(prevActivityIsMain){
 			btLeft.setVisibility(View.INVISIBLE);
 		}else{
-//			btLeft.setText(this.getResources().getString(r.s));
+//			btLeft.setText(this.getResources().getString(R.string.back));
 			btLeft.setVisibility(View.VISIBLE);
 		}
 	}
@@ -71,21 +81,61 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 	 */
 	private void initLvGoodsType(){
 		lvGoodsType = (ListView) this.findViewById(R.id.lvGoodsType);
+		lvGoodsType.setOnItemClickListener(GoodsTypeActivity.this);
 		
 		if(goodsTypes == null || goodsTypes.size() == 0){
-			goodsTypes = new ArrayList<GoodsType>();
-			
-			for (int i = 1; i <= 10; i++) {
-				GoodsType goodsType = new Goods();
-				goodsType.setId(i);
-				goodsType.setName("商品类型" + i);
-				goodsTypes.add(goodsType);
-			}
+			new Thread(){
+				public void run() {
+					try {
+						Map<String,String> paramsMap = new HashMap<String, String>();
+						paramsMap.put("method", "taobao.itemcats.get");
+						paramsMap.put("fields", "cid,parent_cid,name,is_parent");
+						Long parentCid = 0L;
+						if(parentGoodsType != null)
+							parentCid = parentGoodsType.getId();
+						paramsMap.put("parent_cid", parentCid.toString());
+						RequestParams params = new RequestParams(TaobaoUtils.generateApiParams(paramsMap, null));
+						
+						AsyncHttpClient ahc = new AsyncHttpClient();
+						ahc.post(TaobaoUtils.URL, params, new JsonHttpResponseHandler(){
+							@Override
+							public void onSuccess(JSONObject response) {
+								try {
+									goodsTypes = new ArrayList<GoodsType>();
+									JSONArray itemCats = response
+															.getJSONObject("itemcats_get_response")
+															.getJSONObject("item_cats")
+															.getJSONArray("item_cat");
+									for (int i=0; i<itemCats.length();i++) {
+										GoodsType goodsType = new GoodsType();
+										JSONObject itemCat = itemCats.optJSONObject(i);
+										goodsType.setName(itemCat.getString("name"));
+										goodsType.setId(itemCat.getLong("cid"));
+										goodsType.setParentId(itemCat.getLong("parent_cid"));
+										goodsType.setLeaf(!itemCat.getBoolean("is_parent"));
+										goodsTypes.add(goodsType);
+										
+//										System.out.println(goodsType.getId());
+									}
+									
+									GoodsTypeActivity.this.runOnUiThread(new Thread(){
+										public void run() {
+											lvGoodsType.setAdapter(new LvGoodsTypeSelectedAdapater());
+										};
+									});
+									
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								
+							}
+						});
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				};
+			}.start();
 		}
-		
-		lvGoodsType.setAdapter(new LvGoodsTypeSelectedAdapater());
-		
-		lvGoodsType.setOnItemClickListener(this);
 	}
 	
 	/**
@@ -94,7 +144,6 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		GoodsType goodsType = goodsTypes.get(position);
-		goodsType.setLeaf(true);
 		Intent intent = null;
 		//如果商品类型是最后一级，就切换到商品页面，否则依然在商品类型页面切换
 		if(goodsType.isLeaf()){
@@ -103,7 +152,8 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 			intent = new Intent(this,GoodsTypeActivity.class);
 		}
 		
-		intent.putExtra("title", goodsTypes.get(position).getName());
+//		intent.putExtra("title", goodsTypes.get(position).getName());
+		intent.putExtra("goodsType", goodsType);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}

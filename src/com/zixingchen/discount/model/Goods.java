@@ -1,11 +1,14 @@
 package com.zixingchen.discount.model;
 
+import java.io.Serializable;
+
 /**
  * 商品
  * @author 陈梓星
  */
-public class Goods extends GoodsType{
-	private int id;
+public class Goods extends GoodsType implements Serializable{
+	private static final long serialVersionUID = 1839147853139127631L;
+	
 	private GoodsType goodsType;//所属分类
 	private float prePrice;//商品价格
 	private float currentPrice;//当前价格
@@ -48,13 +51,5 @@ public class Goods extends GoodsType{
 
 	public void setDescript(String descript) {
 		this.descript = descript;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 }

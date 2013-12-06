@@ -73,7 +73,7 @@ public class MainActivity extends Activity{
 			
 			for (int i = 1; i <= 10; i++) {
 				Goods goodsType = new Goods();
-				goodsType.setId(i);
+				goodsType.setId(Long.valueOf(i));
 				goodsType.setName("商品类型" + i);
 				goodsTypes.add(goodsType);
 			}
@@ -92,7 +92,7 @@ public class MainActivity extends Activity{
 					float prePrice = random.nextInt(1000);
 					
 					Goods goods = new Goods();
-					goods.setId(j+k);
+					goods.setId(Long.valueOf(j+k));
 					goods.setName("商品商品商品商品商品商品商品商品商品商品商品商品" + k);
 					goods.setSubTitle("子标题"+k);
 					goods.setCurrentPrice(currentPrice);

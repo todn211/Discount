@@ -1,7 +1,12 @@
 package com.zixingchen.discount.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,8 +20,13 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.model.Goods;
+import com.zixingchen.discount.model.GoodsType;
+import com.zixingchen.discount.utils.TaobaoUtils;
 
 /**
  * 商品项页面
@@ -26,18 +36,24 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 
 	private List<Goods> goodses;//商品集合 
 	private ListView lvGoodsItem;//商品列表
+	private GoodsType goodsType;//所属商品类型对象
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.goods_item_activity);
 		
+		Intent intent = this.getIntent();
+		
+		//初始化商品类型对象
+		goodsType = (GoodsType) intent.getSerializableExtra("goodsType");
+		
 		//初始化商品列表
 		initLvGoodsItem();
 		
 		//初始化标题
 		TextView tvTitle = (TextView) this.findViewById(R.id.tvTitle);
-		tvTitle.setText(this.getIntent().getStringExtra("title"));
+		tvTitle.setText(goodsType.getName());
 	}
 	
 	/**
@@ -48,15 +64,62 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 		lvGoodsItem.setOnItemClickListener(this);
 		
 		//远程加载商品列表
-		goodses = new ArrayList<Goods>();
-		for (int i = 0; i < 20; i++) {
-			Goods goods = new Goods();
-			goods.setName("商品" + i);
-			goods.setCurrentPrice(i);
-			goodses.add(goods);
-		}
+//		goodses = new ArrayList<Goods>();
+//		for (int i = 0; i < 20; i++) {
+//			Goods goods = new Goods();
+//			goods.setName("商品" + i);
+//			goods.setCurrentPrice(i);
+//			goodses.add(goods);
+//		}
+//		
+//		lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
 		
-		lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
+		new Thread(){
+			public void run() {
+				try {
+					Map<String,String> paramsMap = new HashMap<String, String>();
+					paramsMap.put("method", "taobao.items.search");
+					paramsMap.put("fields", "num_iid,title,nick,pic_url,cid,price,type,delist_time,post_fee");
+					paramsMap.put("cid", goodsType.getId().toString());
+					RequestParams params = new RequestParams(TaobaoUtils.generateApiParams(paramsMap, null));
+					
+					AsyncHttpClient ahc = new AsyncHttpClient();
+					ahc.post(TaobaoUtils.URL, params, new JsonHttpResponseHandler(){
+						@Override
+						public void onSuccess(JSONObject response) {
+							try {
+								goodses = new ArrayList<Goods>();
+								JSONArray itemCats = response
+														.getJSONObject("itemcats_get_response")
+														.getJSONObject("item_cats")
+														.getJSONArray("item_cat");
+								for (int i=0; i<itemCats.length();i++) {
+									Goods goods = new Goods();
+									JSONObject item = itemCats.optJSONObject(i);
+//									goods.setId(id);
+//									goods.setName(name);
+//									goods.setCurrentPrice(currentPrice);
+//									goods.setIcon(icon);
+									goodses.add(goods);
+								}
+								
+								GoodsItemActivity.this.runOnUiThread(new Thread(){
+									public void run() {
+										lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
+									};
+								});
+								
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			};
+		}.start();
 	}
 	
 	/**

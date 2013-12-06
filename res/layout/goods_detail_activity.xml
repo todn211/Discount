@@ -4,8 +4,52 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" 
+    tools:context=".GoodsDeailActivity">
 
+    <!-- 工具条 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/toolbar_bg"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/cornersButton"
+            android:text="@string/refresh"
+            android:drawableLeft="@drawable/refresh_icon"
+            android:drawablePadding="5dp"
+            android:onClick="onBtRefreshClick"/>
+            
+        
+        <TextView 
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/myAttention"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_weight="100"
+            android:gravity="center_horizontal"
+            />
+
+        <Button
+            android:id="@+id/btAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/cornersButton"
+            android:drawableLeft="@drawable/add_icon"
+            android:drawablePadding="5dp"
+            android:text="@string/addAttention" 
+            android:onClick="onBtAddClick"/>
+    </LinearLayout>
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -38,7 +82,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"  android:layout_gravity="bottom">
+                android:gravity="center_vertical">
 
                 <Button
                     style="@style/cornersButton"
@@ -55,7 +99,12 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextureView
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#EEEEEE"/>
+    
+    <TextView
         android:id="@+id/tvGoodsDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
