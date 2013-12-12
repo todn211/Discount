@@ -6,7 +6,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 /**
- * 商品详细信息展示页面
+ * 商品详细信息展示页面 
  * @author 陈梓星
  */
 public class GoodsDeailActivity extends Activity {
