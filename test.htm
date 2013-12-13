@@ -8,30 +8,39 @@
 			var fullLink = $(catItem).attr("href");
 			var name = $(catItem).text();
 			var link = fullLink.substr(0,fullLink.indexOf("?"));
-			var cat = fullLink.substr(fullLink.indexOf("cat="));
+			var cat = fullLink.substr(fullLink.indexOf("cat=")+4);
 			var catObj = {name:name, link:link, cat:cat,children:[]};
 
 			//构建子级
 			var subItem = $(this).find(".sublist").find("a");
 			$(subItem).each(function(j){
-				name = $(this).text();
+				var subCatObj = {};
 				fullLink = $(this).attr("href");
-				cat = fullLink.substr(fullLink.indexOf("cat="));
-				var subCatObj = {name:name, cat:cat};
+				subCatObj.name = $(this).text();
+				
+				if(fullLink.indexOf("&q=") != -1){
+					subCatObj.cat = fullLink.substring (fullLink.indexOf("cat=")+4,fullLink.indexOf("&q="));
+					subCatObj.query = subCatObj.name;
+				}else if(fullLink.indexOf("&ppath=") != -1){
+					subCatObj.cat = fullLink.substring (fullLink.indexOf("cat=")+4,fullLink.indexOf("&ppath="));
+					subCatObj.ppath = subCatObj.name;
+				}else{
+					subCatObj.cat = fullLink.substr(fullLink.indexOf("cat=")+4);
+				}
+				
 				catObj.children.push(subCatObj);
 			});
-
+			
 			cats[i] = catObj;
 		});
-
-		//alert(JSON.stringify(cats));
+		
 		$("#txtCats").text(JSON.stringify(cats));
 	});
 </script>
 
 
 
-<areatext id="txtCats" cols="50" rows="20">
+<areatext id="txtCats" cols="10" rows="10">
 
 <h4>女装男装</h4>
 </div>
@@ -105,7 +114,7 @@
 <div class="cat-r">
 <ul class="clearfix">
 <li class="section clearfix">
-<h5 class="subtitle"><a href="http://list.taobao.com/itemlist/nanzhuang2011a.htm?spm=5221.539771.5825413.49&cat=30&isprepay=1&viewIndex=1&style=grid&tid=0&isnew=2&olu=yes&random=false&sd=1&as=0&commend=all&atype=b&q=%E7%A7%8B&same_info=1&smc=1&_input_charset=utf-8&md=5221" target="_blank">当季男装</a></h5>
+<h5 class="subtitle"><a href="http://list.taobao.com/itemlist/nanzhuang2011a.htm?spm=5221.539771.5825413.49&cat=30" target="_blank">当季男装</a></h5>
 <div class="sublist">
 <a href="http://list.taobao.com/itemlist/default.htm?spm=5221.539771.5825413.50&cat=50011179" target="_blank">休闲长裤</a>
 <a href="http://list.taobao.com/itemlist/default.htm?spm=5221.539771.5825413.51&cat=50011131" target="_blank">长袖衬衫</a>
@@ -120,7 +129,7 @@
 </div>
 </li>
 <li class="section clearfix">
-<h5 class="subtitle"><a href="http://list.taobao.com/itemlist/nanzhuang2011a.htm?spm=5221.539771.5825413.60&cat=30&isprepay=1&viewIndex=1&style=grid&tid=0&isnew=2&olu=yes&random=false&sd=1&as=0&commend=all&atype=b&q=%E7%A7%8B&same_info=1&smc=1&_input_charset=utf-8&md=5221" target="_blank">男式裤子</a></h5>
+<h5 class="subtitle"><a href="http://list.taobao.com/itemlist/nanzhuang2011a.htm?spm=5221.539771.5825413.60&cat=30" target="_blank">男式裤子</a></h5>
 <div class="sublist">
 <a href="http://list.taobao.com/itemlist/default.htm?spm=5221.539771.5825413.61&cat=50106127" target="_blank">牛仔裤</a>
 <a href="http://list.taobao.com/itemlist/default.htm?spm=5221.539771.5825413.62&cat=50106128" target="_blank">休闲裤</a>
@@ -134,7 +143,7 @@
 </div>
 </li>
 <li class="section clearfix">
-<h5 class="subtitle"><a href="http://list.taobao.com/itemlist/nanzhuang2011a.htm?spm=5221.539771.5825413.70&cat=30&isprepay=1&viewIndex=1&style=grid&tid=0&isnew=2&olu=yes&random=false&sd=1&as=0&commend=all&atype=b&q=%E7%A7%8B&same_info=1&smc=1&_input_charset=utf-8&md=5221" target="_blank">男式上装</a></h5>
+<h5 class="subtitle"><a href="http://list.taobao.com/itemlist/nanzhuang2011a.htm?spm=5221.539771.5825413.70&cat=30" target="_blank">男式上装</a></h5>
 <div class="sublist">
 <a href="http://list.taobao.com/itemlist/default.htm?spm=5221.539771.5825413.71&cat=50029373" target="_blank">棉衣</a>
 <a href="http://list.taobao.com/itemlist/default.htm?spm=5221.539771.5825413.72&cat=50029375" target="_blank">羽绒服</a>
@@ -149,7 +158,7 @@
 </div>
 </li>
 <li class="section clearfix">
-<h5 class="subtitle"><a href="http://list.taobao.com/itemlist/nanzhuang2011a.htm?spm=5221.539771.5825413.81&cat=30&isprepay=1&viewIndex=1&style=grid&tid=0&isnew=2&olu=yes&random=false&sd=1&as=0&commend=all&atype=b&q=%E7%A7%8B&same_info=1&smc=1&_input_charset=utf-8&md=5221" target="_blank">其他男装</a></h5>
+<h5 class="subtitle"><a href="http://list.taobao.com/itemlist/nanzhuang2011a.htm?spm=5221.539771.5825413.81&cat=30" target="_blank">其他男装</a></h5>
 <div class="sublist">
 <a href="http://list.taobao.com/itemlist/default.htm?spm=5221.539771.5825413.82&cat=50052113" target="_blank">中老年男装</a>
 <a href="http://list.taobao.com/itemlist/default.htm?spm=5221.539771.5825413.83&cat=50046607" target="_blank">大码男装</a>
@@ -161,18 +170,7 @@
 </div>
 </div>
 </div>
-<div class="market-cat J_TBMarketCat tm2" id="cat2">
-<div class="market-link clearfix">
-<span class="m893 link-wrap"><i></i><a href="http://nvxie.taobao.com/market/ladyshoes/nvxie.php?spm=5221.539771.5825413.86" target="_blank">女鞋市场&nbsp;&gt;</a></span>
-<span class="m896 link-wrap"><i></i><a href="http://nanxie.taobao.com/market/manshoes/nanxie.php?spm=5221.539771.5825413.87" target="_blank">男鞋市场&nbsp;&gt;</a></span>
-<span class="m894 link-wrap"><i></i><a href="http://nvbao.taobao.com/go/market/bao/nvbao2013.php?spm=5221.539771.5825413.88" target="_blank">女包市场&nbsp;&gt;</a></span>
-<span class="m897 link-wrap"><i></i><a href="http://nanbao.taobao.com/go/market/bao/nanbao2013.php?spm=5221.539771.5825413.89" target="_blank">男包市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">B</i>
-</div>
+
 <h4>鞋类箱包</h4>
 </div>
 <div class="catlist clearfix">
@@ -320,16 +318,6 @@
 </div>
 </div>
 </div>
-<div class="market-cat J_TBMarketCat tm3" id="cat3">
-<div class="market-link clearfix">
-<span class="m898 link-wrap"><i></i><a href="http://neiyi.taobao.com/market/underwear/neiyi2013.php?spm=5221.539771.5825413.192" target="_blank">内衣市场&nbsp;&gt;</a></span>
-<span class="m899 link-wrap"><i></i><a href="http://list.taobao.com/itemlist/peishi2011a.htm?spm=5221.539771.5825413.193" target="_blank">服饰配件&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">C</i>
-</div>
 <h4>内衣配饰</h4>
 </div>
 <div class="catlist clearfix">
@@ -420,15 +408,6 @@
 </ul>
 </div>
 </div>
-</div>
-<div class="market-cat J_TBMarketCat tm4" id="cat4">
-<div class="market-link clearfix">
-<span class="m944 link-wrap"><i></i><a href="http://sport.taobao.com/?spm=5221.539771.5825413.256" target="_blank">运动市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">D</i>
 </div>
 <h4>运动户外</h4>
 </div>
@@ -532,15 +511,6 @@
 </div>
 </div>
 </div>
-<div class="market-cat J_TBMarketCat tm5" id="cat5">
-<div class="market-link clearfix">
-<span class="m965 link-wrap"><i></i><a href="http://www.taobao.com/market/shipin/index2012.php?spm=5221.539771.5825413.326" target="_blank">配饰市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">R</i>
-</div>
 <h4>珠宝手表</h4>
 </div>
 <div class="catlist clearfix">
@@ -624,15 +594,6 @@
 </ul>
 </div>
 </div>
-</div>
-<div class="market-cat J_TBMarketCat tm6" id="cat6">
-<div class="market-link clearfix">
-<span class="m872 link-wrap"><i></i><a href="http://www.taobao.com/market/3c/index_new.php?spm=5221.539771.5825413.382" target="_blank">数码市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">F</i>
 </div>
 <h4>数码</h4>
 </div>
@@ -766,15 +727,6 @@
 </div>
 </div>
 </div>
-<div class="market-cat J_TBMarketCat tm7" id="cat7">
-<div class="market-link clearfix">
-<span class="m5179 link-wrap"><i></i><a href="http://jiadian.taobao.com/?spm=5221.539771.5825413.470" target="_blank">家电市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">G</i>
-</div>
 <h4>家电办公</h4>
 </div>
 <div class="catlist clearfix">
@@ -882,15 +834,6 @@
 </div>
 </div>
 </div>
-<div class="market-cat J_TBMarketCat tm8" id="cat8">
-<div class="market-link clearfix">
-<span class="m843 link-wrap"><i></i><a href="http://mei.taobao.com/?spm=5221.539771.5825413.541" target="_blank">美妆市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">H</i>
-</div>
 <h4>护肤彩妆</h4>
 </div>
 <div class="catlist clearfix">
@@ -979,15 +922,6 @@
 </ul>
 </div>
 </div>
-</div>
-<div class="market-cat J_TBMarketCat tm9" id="cat9">
-<div class="market-link clearfix">
-<span class="m869 link-wrap"><i></i><a href="http://baobao.taobao.com/?spm=5221.539771.5825413.602" target="_blank">母婴市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">I</i>
 </div>
 <h4>母婴用品</h4>
 </div>
@@ -1111,15 +1045,6 @@
 </ul>
 </div>
 </div>
-</div>
-<div class="market-cat J_TBMarketCat tm10" id="cat10">
-<div class="market-link clearfix">
-<span class="m861 link-wrap"><i></i><a href="http://home.taobao.com/?spm=5221.539771.5825413.689" target="_blank">家居市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">J</i>
 </div>
 <h4>家居建材</h4>
 </div>
@@ -1250,16 +1175,6 @@
 </div>
 </div>
 </div>
-<div class="market-cat J_TBMarketCat tm11" id="cat11">
-<div class="market-link clearfix">
-<span class="m885 link-wrap"><i></i><a href="http://chi.taobao.com/?spm=5221.539771.5825413.782" target="_blank">食品市场&nbsp;&gt;</a></span>
-<span class="m5137 link-wrap"><i></i><a href="http://ny.taobao.com/?spm=5221.539771.5825413.783" target="_blank">生态农业&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">K</i>
-</div>
 <h4>美食特产</h4>
 </div>
 <div class="catlist clearfix">
@@ -1387,15 +1302,6 @@
 </div>
 </div>
 </div>
-<div class="market-cat J_TBMarketCat tm12" id="cat12">
-<div class="market-link clearfix">
-<span class="m990 link-wrap"><i></i><a href="http://baihuo.taobao.com/?spm=5221.539771.5825413.874" target="_blank">百货市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">L</i>
-</div>
 <h4>日用百货</h4>
 </div>
 <div class="catlist clearfix">
@@ -1500,15 +1406,6 @@
 </div>
 </div>
 </div>
-<div class="market-cat J_TBMarketCat tm13" id="cat13">
-<div class="market-link clearfix">
-<span class="m5082 link-wrap"><i></i><a href="http://car.taobao.com/?spm=5221.539771.5825413.946" target="_blank">汽车配件&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">M</i>
-</div>
 <h4>汽车摩托</h4>
 </div>
 <div class="catlist clearfix">
@@ -1559,16 +1456,6 @@
 </ul>
 </div>
 </div>
-</div>
-<div class="market-cat J_TBMarketCat tm14" id="cat14">
-<div class="market-link clearfix">
-<span class="m5206 link-wrap"><i></i><a href="http://list.taobao.com/itemlist/wenyu.htm?spm=5221.539771.5825413.977" target="_blank">文娱市场&nbsp;&gt;</a></span>
-<span class="m5059 link-wrap"><i></i><a href="http://www.taobao.com/market/huaniao/default.php?spm=5221.539771.5825413.978" target="_blank">花鸟市场&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">N</i>
 </div>
 <h4>文化玩乐</h4>
 </div>
@@ -1702,15 +1589,6 @@
 </ul>
 </div>
 </div>
-</div>
-<div class="market-cat J_TBMarketCat tm15" id="cat15">
-<div class="market-link clearfix">
-<span class="m5026 link-wrap"><i></i><a href="http://life.taobao.com/?spm=5221.539771.5825413.1067" target="_blank">本地生活&nbsp;&gt;</a></span>
-</div>
-<div class="title clearfix">
-<div class="icon-wrap">
-<i class="shadow"></i>
-<i class="icon">O</i>
 </div>
 <h4>本地生活</h4>
 </div>
