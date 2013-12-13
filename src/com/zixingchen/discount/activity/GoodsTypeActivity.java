@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.zixingchen.discount.R;
@@ -87,47 +88,54 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 			new Thread(){
 				public void run() {
 					try {
-						Map<String,String> paramsMap = new HashMap<String, String>();
-						paramsMap.put("method", "taobao.itemcats.get");
-						paramsMap.put("fields", "cid,parent_cid,name,is_parent");
-						Long parentCid = 0L;
-						if(parentGoodsType != null)
-							parentCid = parentGoodsType.getId();
-						paramsMap.put("parent_cid", parentCid.toString());
-						RequestParams params = new RequestParams(TaobaoUtils.generateApiParams(paramsMap, null));
+//						Map<String,String> paramsMap = new HashMap<String, String>();
+//						paramsMap.put("method", "taobao.itemcats.get");
+//						paramsMap.put("fields", "cid,parent_cid,name,is_parent");
+//						Long parentCid = 0L;
+//						if(parentGoodsType != null)
+//							parentCid = parentGoodsType.getId();
+//						paramsMap.put("parent_cid", parentCid.toString());
+//						RequestParams params = new RequestParams(TaobaoUtils.generateApiParams(paramsMap, null));
+//						
+//						AsyncHttpClient ahc = new AsyncHttpClient();
+//						ahc.post(TaobaoUtils.URL, params, new JsonHttpResponseHandler(){
+//							@Override
+//							public void onSuccess(JSONObject response) {
+//								try {
+//									goodsTypes = new ArrayList<GoodsType>();
+//									JSONArray itemCats = response
+//															.getJSONObject("itemcats_get_response")
+//															.getJSONObject("item_cats")
+//															.getJSONArray("item_cat");
+//									for (int i=0; i<itemCats.length();i++) {
+//										GoodsType goodsType = new GoodsType();
+//										JSONObject itemCat = itemCats.optJSONObject(i);
+//										goodsType.setName(itemCat.getString("name"));
+//										goodsType.setId(itemCat.getLong("cid"));
+//										goodsType.setParentId(itemCat.getLong("parent_cid"));
+//										goodsType.setLeaf(!itemCat.getBoolean("is_parent"));
+//										goodsTypes.add(goodsType);
+//									}
+//									
+//									GoodsTypeActivity.this.runOnUiThread(new Thread(){
+//										public void run() {
+//											lvGoodsType.setAdapter(new LvGoodsTypeSelectedAdapater());
+//										};
+//									});
+//									
+//								} catch (Exception e) {
+//									e.printStackTrace();
+//								}
+//								
+//							}
+//						});
 						
+						String url = "http://list.taobao.com/itemlist/default.htm?cat=50016772";
 						AsyncHttpClient ahc = new AsyncHttpClient();
-						ahc.post(TaobaoUtils.URL, params, new JsonHttpResponseHandler(){
+						ahc.post(url, new AsyncHttpResponseHandler(){
 							@Override
-							public void onSuccess(JSONObject response) {
-								try {
-									goodsTypes = new ArrayList<GoodsType>();
-									JSONArray itemCats = response
-															.getJSONObject("itemcats_get_response")
-															.getJSONObject("item_cats")
-															.getJSONArray("item_cat");
-									for (int i=0; i<itemCats.length();i++) {
-										GoodsType goodsType = new GoodsType();
-										JSONObject itemCat = itemCats.optJSONObject(i);
-										goodsType.setName(itemCat.getString("name"));
-										goodsType.setId(itemCat.getLong("cid"));
-										goodsType.setParentId(itemCat.getLong("parent_cid"));
-										goodsType.setLeaf(!itemCat.getBoolean("is_parent"));
-										goodsTypes.add(goodsType);
-										
-//										System.out.println(goodsType.getId());
-									}
-									
-									GoodsTypeActivity.this.runOnUiThread(new Thread(){
-										public void run() {
-											lvGoodsType.setAdapter(new LvGoodsTypeSelectedAdapater());
-										};
-									});
-									
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								
+							public void onSuccess(String arg0) {
+								System.out.println(arg0);
 							}
 						});
 					} catch (Exception e) {
