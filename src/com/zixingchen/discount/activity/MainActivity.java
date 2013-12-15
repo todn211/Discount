@@ -15,6 +15,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.zixingchen.discount.R;
+import com.zixingchen.discount.dao.DBHelp;
 import com.zixingchen.discount.model.Goods;
 
 /**
@@ -40,13 +41,16 @@ public class MainActivity extends Activity{
 		btRefresh = (Button) this.findViewById(R.id.btRefresh);
 		btAdd = (Button) this.findViewById(R.id.btAdd);
 		getWindow().setWindowAnimations(0);
+		
+		//初始化数据库
+		new DBHelp(this,DBHelp.VERSION).getReadableDatabase();
 	}
 	/**
 	 * 刷新关注的列表
 	 * @param view
 	 */
 	public void onBtRefreshClick(View view){
-		
+//		new DBHelp(this, 1).insertGoodsType();
 	}
 	
 	/**

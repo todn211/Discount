@@ -16,10 +16,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 import android.text.TextUtils;
 
-public abstract class TaobaoUtils {
+public abstract class TaobaoUtil {
 	public static final String URL = "http://gw.api.taobao.com/router/rest";
 	
-	private TaobaoUtils() {
+	private TaobaoUtil() {
 	}
 
 	/**

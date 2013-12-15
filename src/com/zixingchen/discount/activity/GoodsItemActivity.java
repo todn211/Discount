@@ -26,7 +26,7 @@ import com.loopj.android.http.RequestParams;
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
-import com.zixingchen.discount.utils.TaobaoUtils;
+import com.zixingchen.discount.utils.TaobaoUtil;
 
 /**
  * 商品项页面
@@ -81,10 +81,10 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 					paramsMap.put("method", "taobao.items.search");
 					paramsMap.put("fields", "num_iid,title,nick,pic_url,cid,price,type,delist_time,post_fee");
 					paramsMap.put("cid", goodsType.getId().toString());
-					RequestParams params = new RequestParams(TaobaoUtils.generateApiParams(paramsMap, null));
+					RequestParams params = new RequestParams(TaobaoUtil.generateApiParams(paramsMap, null));
 					
 					AsyncHttpClient ahc = new AsyncHttpClient();
-					ahc.post(TaobaoUtils.URL, params, new JsonHttpResponseHandler(){
+					ahc.post(TaobaoUtil.URL, params, new JsonHttpResponseHandler(){
 						@Override
 						public void onSuccess(JSONObject response) {
 							try {

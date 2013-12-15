@@ -25,8 +25,9 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.zixingchen.discount.R;
+import com.zixingchen.discount.business.GoodsTypeBusiness;
 import com.zixingchen.discount.model.GoodsType;
-import com.zixingchen.discount.utils.TaobaoUtils;
+import com.zixingchen.discount.utils.TaobaoUtil;
 
 /**
  * 选择关注商品类
@@ -88,56 +89,20 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 			new Thread(){
 				public void run() {
 					try {
-//						Map<String,String> paramsMap = new HashMap<String, String>();
-//						paramsMap.put("method", "taobao.itemcats.get");
-//						paramsMap.put("fields", "cid,parent_cid,name,is_parent");
-//						Long parentCid = 0L;
-//						if(parentGoodsType != null)
-//							parentCid = parentGoodsType.getId();
-//						paramsMap.put("parent_cid", parentCid.toString());
-//						RequestParams params = new RequestParams(TaobaoUtils.generateApiParams(paramsMap, null));
-//						
-//						AsyncHttpClient ahc = new AsyncHttpClient();
-//						ahc.post(TaobaoUtils.URL, params, new JsonHttpResponseHandler(){
-//							@Override
-//							public void onSuccess(JSONObject response) {
-//								try {
-//									goodsTypes = new ArrayList<GoodsType>();
-//									JSONArray itemCats = response
-//															.getJSONObject("itemcats_get_response")
-//															.getJSONObject("item_cats")
-//															.getJSONArray("item_cat");
-//									for (int i=0; i<itemCats.length();i++) {
-//										GoodsType goodsType = new GoodsType();
-//										JSONObject itemCat = itemCats.optJSONObject(i);
-//										goodsType.setName(itemCat.getString("name"));
-//										goodsType.setId(itemCat.getLong("cid"));
-//										goodsType.setParentId(itemCat.getLong("parent_cid"));
-//										goodsType.setLeaf(!itemCat.getBoolean("is_parent"));
-//										goodsTypes.add(goodsType);
-//									}
-//									
-//									GoodsTypeActivity.this.runOnUiThread(new Thread(){
-//										public void run() {
-//											lvGoodsType.setAdapter(new LvGoodsTypeSelectedAdapater());
-//										};
-//									});
-//									
-//								} catch (Exception e) {
-//									e.printStackTrace();
-//								}
-//								
-//							}
-//						});
+						//获取商品类型集合
+						GoodsTypeBusiness goodsTypeBusiness = new GoodsTypeBusiness(GoodsTypeActivity.this);
+						if(parentGoodsType == null)
+							goodsTypes = goodsTypeBusiness.findGoodsTypesByParentId(0L);
+						else
+							goodsTypes = goodsTypeBusiness.findGoodsTypesByParentId(parentGoodsType.getId());
 						
-						String url = "http://list.taobao.com/itemlist/default.htm?cat=50016772";
-						AsyncHttpClient ahc = new AsyncHttpClient();
-						ahc.post(url, new AsyncHttpResponseHandler(){
-							@Override
-							public void onSuccess(String arg0) {
-								System.out.println(arg0);
-							}
-						});
+						if(goodsTypes != null && goodsTypes.size() > 0){
+							GoodsTypeActivity.this.runOnUiThread(new Thread(){
+								public void run() {
+									lvGoodsType.setAdapter(new LvGoodsTypeSelectedAdapater());
+								};
+							});
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -154,7 +119,7 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 		GoodsType goodsType = goodsTypes.get(position);
 		Intent intent = null;
 		//如果商品类型是最后一级，就切换到商品页面，否则依然在商品类型页面切换
-		if(goodsType.isLeaf()){
+		if(GoodsType.YES.equals(goodsType.isLeaf())){
 			intent = new Intent(this,GoodsItemActivity.class);
 		}else{
 			intent = new Intent(this,GoodsTypeActivity.class);
