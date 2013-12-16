@@ -16,6 +16,7 @@ public class Goods implements Serializable{
 	private String name;//商品名
 	private String subTitle;//商品子标题
 	private String descript;//商品说明
+	private String icon;//图标
 
 	public Goods() {
 	}
@@ -78,5 +79,13 @@ public class Goods implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 }

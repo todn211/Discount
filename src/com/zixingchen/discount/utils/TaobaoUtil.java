@@ -17,7 +17,12 @@ import javax.crypto.spec.SecretKeySpec;
 import android.text.TextUtils;
 
 public abstract class TaobaoUtil {
-	public static final String URL = "http://gw.api.taobao.com/router/rest";
+//	public static final String URL = "http://gw.api.taobao.com/router/rest";
+	
+	/**
+	 * 商品列表URL
+	 */
+	public static final String GOODS_ITEM_LIST_URL = "http://list.taobao.com/itemlist/default.htm";
 	
 	private TaobaoUtil() {
 	}
