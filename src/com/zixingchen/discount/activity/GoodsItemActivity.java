@@ -4,7 +4,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +19,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsItemBusiness;
 import com.zixingchen.discount.common.Page;
@@ -30,6 +36,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	private List<Goods> goodses;//商品集合 
 	private ListView lvGoodsItem;//商品列表
 	private GoodsType goodsType;//所属商品类型对象
+	private GoodsItemHandler handler = new GoodsItemHandler();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +68,12 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 			public void run() {
 				try {
 					GoodsItemBusiness bussiness = new GoodsItemBusiness(GoodsItemActivity.this);
-					goodses = bussiness.findGoodsByGoodsType(goodsType, new Page());
-					
-					GoodsItemActivity.this.runOnUiThread(new Thread(){
-						public void run() {
-							lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
-						};
-					});
+					goodses = bussiness.findGoodsByGoodsType(goodsType, new Page(),handler);
 				} catch (Exception e) {
 					e.printStackTrace();
-					GoodsItemActivity.this.runOnUiThread(new Thread(){
-						public void run() {
-							Toast.makeText(GoodsItemActivity.this, "加载商品列表失败！", Toast.LENGTH_LONG).show();
-						};
-					});
+					Message msg = Message.obtain();
+					msg.what = GoodsItemBusiness.FIND_GOODS_FAILURE;
+					handler.sendMessage(msg);
 				}
 			};
 		}.start();
@@ -137,6 +136,24 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	}
 	
 	/**
+	 * 商品项列表消息分配器、处理器
+	 * @author 陈梓星
+	 */
+	private class GoodsItemHandler extends Handler{
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case GoodsItemBusiness.FIND_GOODS_SUCCESS:
+				lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
+				break;
+			case GoodsItemBusiness.FIND_GOODS_FAILURE:
+				Toast.makeText(GoodsItemActivity.this, "加载商品列表失败！", Toast.LENGTH_LONG).show();
+				break;
+			}
+		}
+	}
+	
+	/**
 	 * 商品项列表适配器
 	 * @author 陈梓星
 	 */
@@ -169,11 +186,53 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 			Goods goods = goodses.get(position);
 			tvName.setText(goods.getName());
 			tvPrice.setText("￥" + goods.getCurrentPrice());
-			
-//			Bitmap bm = BitmapFactory.decodeStream(is, outPadding, opts)
-//			ivGoodsIcon.setImageBitmap(bm);
-			
+			loadIcon(ivGoodsIcon,goods.getIcon());
 			return convertView;
 		}
 	}
+	
+	private void loadIcon(final ImageView imageView,final String url) {
+		new Thread(){
+			public void run() {
+				AsyncHttpClient ahc = new AsyncHttpClient();
+				ahc.get(url, new BinaryHttpResponseHandler(){
+					@Override
+					public void onSuccess(byte[] data) {
+						try {
+							BitmapFactory.Options opts = new BitmapFactory.Options();
+							BitmapFactory.decodeByteArray(data, 0, data.length, opts);
+							opts.inJustDecodeBounds = true;
+							opts.inSampleSize = calculateInSampleSize(opts,100,100);
+							
+							opts.inJustDecodeBounds = false;
+							final Bitmap tmpBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, opts);
+							
+							GoodsItemActivity.this.runOnUiThread(new Thread(){
+								public void run() {
+									imageView.setImageBitmap(tmpBitmap);
+								};
+							});
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+			};
+		}.start();
+	}
+	
+	private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		final int height = options.outHeight;  
+		final int width = options.outWidth;  
+		int inSampleSize = 1;  
+	  
+		if (height > reqHeight || width > reqWidth) {  
+			if (width > height) {  
+				inSampleSize = Math.round((float)height / (float)reqHeight);  
+			} else {  
+				inSampleSize = Math.round((float)width / (float)reqWidth);  
+			}
+		}
+		return inSampleSize;  
+	} 
 }
