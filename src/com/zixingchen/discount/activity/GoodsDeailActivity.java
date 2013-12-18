@@ -15,6 +15,7 @@ import com.zixingchen.discount.model.Goods;
 public class GoodsDeailActivity extends Activity {
 	
 	private WebView wvGoodsDetail;
+	private Goods goodsItem;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,23 +23,25 @@ public class GoodsDeailActivity extends Activity {
 		this.setContentView(R.layout.goods_detail_activity);
 		
 		//获取商品项对象
-		final Goods goodsItem = (Goods) this.getIntent().getSerializableExtra("GoodsItem");
+		goodsItem = (Goods) this.getIntent().getSerializableExtra("GoodsItem");
 		
+		//初始化商品内容容器
+		initWvGoodsDetail();
+	}
+	
+	/**
+	 * 初始化商品内容容器
+	 */
+	private void initWvGoodsDetail(){
 		wvGoodsDetail = (WebView) this.findViewById(R.id.wvGoodsDetail);
-//		wvGoodsDetail.getSettings().setJavaScriptEnabled(true);
-		wvGoodsDetail.loadUrl(goodsItem.getHref());
-		
+		wvGoodsDetail.getSettings().setJavaScriptEnabled(true);
 		wvGoodsDetail.setWebViewClient(new WebViewClient(){
 			//点击网页中按钮时，在原页面打开
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				view.loadUrl(url);
 				return true;
 			}
-			//页面加载完成后执行
-			@Override
-			public void onPageFinished(WebView view, String url) {
-				view.loadUrl(goodsItem.getHref());;
-			}
 		});
+		wvGoodsDetail.loadUrl(goodsItem.getHref());
 	}
 }
