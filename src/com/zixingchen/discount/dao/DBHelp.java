@@ -100,12 +100,12 @@ public class DBHelp extends SQLiteOpenHelper {
 		values.put("parent_id", parentId);
 		values.put("is_leaf", isLeaf);
 		
-		if(goodstypeJSON.has("cat")){
+		if(!goodstypeJSON.isNull("cat")){
 			values.put("type_code", goodstypeJSON.getString("cat"));
 		}
 		
-		if(goodstypeJSON.has("query")){
-			values.put("key_word", goodstypeJSON.getString("query"));
+		if(!goodstypeJSON.isNull("query")){
+			values.put("key_word", goodstypeJSON.getString("query").replace("/", " "));
 		}
 		
 		long rowId = db.insert("goods_type", null, values);
@@ -116,6 +116,7 @@ public class DBHelp extends SQLiteOpenHelper {
 		Cursor cursor = db.rawQuery("select max(id) from goods_type", null);
 		cursor.moveToNext();
 		Long id = cursor.getLong(0);
+		cursor.close();
 		return id;
 	}
 	

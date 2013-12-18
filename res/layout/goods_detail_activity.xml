@@ -50,6 +50,14 @@
             android:onClick="onBtAddClick"/>
     </LinearLayout>
     
+    <WebView 
+        android:id="@+id/wvGoodsDetail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="100"
+        />
+    
+    <!-- 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -108,5 +116,5 @@
         android:id="@+id/tvGoodsDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+	 -->
 </LinearLayout>

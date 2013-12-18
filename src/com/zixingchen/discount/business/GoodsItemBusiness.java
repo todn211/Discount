@@ -65,27 +65,32 @@ public class GoodsItemBusiness {
 	public List<Goods> findGoodsByGoodsType(GoodsType goodsType,Page page,final Handler handler) throws Exception{
 		final List<Goods> goodses = new ArrayList<Goods>();
 		
-		
 //		String url = "http://list.taobao.com/itemlist/default.htm?_input_charset=UTF-8&style=list&json=on&pSize=20&cat=1512&data-value=0&q=Huawei/华为";
+		
+		
+//		http://a.m.tmall.com/i35449113053.htm?rn=8L78nC3Z1-IjoQwKY392SltHvBrD-kgmVMQO-hSb3&sid=cd539ba836122f9d&abtest=4
+//		http://detail.tmall.com/item.htm?spm=a2106.m872.1000384.9.L96CSe&id=35017764426&source=dou&scm=1029.newlist-0.1.1512&ppath=&sku=&ug=
 		
 		RequestParams params = createBaseParams();
 		params.put("pSize", String.valueOf(page.getPageSize()));//每页显示行数
 		params.put("data-value", String.valueOf(page.getStartRecord()));//从哪行开始获取数据
 		params.put("cat", goodsType.getTypeCode());
 		if(!TextUtils.isEmpty(goodsType.getKeyWord()))
-			params.put("q", URLEncoder.encode(goodsType.getKeyWord(), "GBK"));
+			params.put("q", URLEncoder.encode(goodsType.getKeyWord(), "UTF-8"));
+		
+		String url = TaobaoUtil.GOODS_ITEM_LIST_URL + "?" + params.toString();
 		
 		AsyncHttpClient ahc = new AsyncHttpClient();
-		ahc.post(TaobaoUtil.GOODS_ITEM_LIST_URL, params, new JsonHttpResponseHandler(){
+		ahc.get(url, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONObject response) {
 				try {
-					if(response.has("itemList")){
+					if(!response.isNull("itemList")){
 						JSONArray goodsItems = response.getJSONArray("itemList");
 						addGoodsToList(goodses, goodsItems);
 					}
 					
-					if(response.has("mallItemList")){
+					if(!response.isNull("mallItemList")){
 						JSONArray goodsItems = response.getJSONArray("mallItemList");
 						addGoodsToList(goodses, goodsItems);
 					}
@@ -119,6 +124,7 @@ public class GoodsItemBusiness {
 			goods.setName(goodsItem.getString("tip"));
 			goods.setCurrentPrice(Float.parseFloat(goodsItem.getString("currentPrice")));
 			goods.setIcon(goodsItem.getString("image") + "_sum.jpg");
+			goods.setHref(goodsItem.getString("href"));
 			goodses.add(goods);
 		}
 	}

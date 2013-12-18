@@ -1,11 +1,10 @@
 package com.zixingchen.discount.activity;
 
+import java.io.File;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,8 +18,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.nostra13.universalimageloader.cache.disc.impl.TotalSizeLimitedDiscCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsItemBusiness;
 import com.zixingchen.discount.common.Page;
@@ -37,6 +41,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	private ListView lvGoodsItem;//商品列表
 	private GoodsType goodsType;//所属商品类型对象
 	private GoodsItemHandler handler = new GoodsItemHandler();
+	private static ImageLoader imageLoader;//图片加载器
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,9 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 		setContentView(R.layout.goods_item_activity);
 		
 		Intent intent = this.getIntent();
+		
+		//初始化图片加载器
+		initImageLoader();
 		
 		//初始化商品类型对象
 		goodsType = (GoodsType) intent.getSerializableExtra("goodsType");
@@ -54,6 +62,35 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 		//初始化标题
 		TextView tvTitle = (TextView) this.findViewById(R.id.tvTitle);
 		tvTitle.setText(goodsType.getName());
+	}
+	
+	/**
+	 * 初始化图片加载器
+	 */
+	private void initImageLoader(){
+		if(imageLoader == null){
+			DisplayImageOptions options = new DisplayImageOptions.Builder()
+	        .showImageOnLoading(R.drawable.ic_launcher)
+	        .showImageForEmptyUri(R.drawable.ic_launcher)
+	        .showImageOnFail(R.drawable.ic_launcher)
+	        .cacheInMemory(true)
+	        .cacheOnDisc(true)
+	        .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//图片缩放方式
+	        .displayer(new RoundedBitmapDisplayer(5))//图片圆角
+	        .build();
+			
+			File cacheDir = StorageUtils.getCacheDirectory(this);
+			ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+												.defaultDisplayImageOptions(options)
+			 									.discCache(new TotalSizeLimitedDiscCache(cacheDir,10485760))
+			 									.discCacheSize(10485760)//内存卡缓存10M图片
+//			 									.memoryCacheSize(10485760)//内存缓存10M图片
+//			 									.memoryCacheSize(memoryCacheSize)
+												.build();
+			
+			imageLoader = ImageLoader.getInstance();
+			imageLoader.init(config);
+		}
 	}
 	
 	/**
@@ -91,7 +128,9 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		this.startActivity(new Intent(this,GoodsDeailActivity.class));
+		Intent intent = new Intent(this,GoodsDeailActivity.class);
+		intent.putExtra("GoodsItem", goodses.get(position));
+		this.startActivity(intent);
 	}
 	
 	/**
@@ -186,53 +225,8 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 			Goods goods = goodses.get(position);
 			tvName.setText(goods.getName());
 			tvPrice.setText("￥" + goods.getCurrentPrice());
-			loadIcon(ivGoodsIcon,goods.getIcon());
+			imageLoader.displayImage(goods.getIcon(), ivGoodsIcon);
 			return convertView;
 		}
 	}
-	
-	private void loadIcon(final ImageView imageView,final String url) {
-		new Thread(){
-			public void run() {
-				AsyncHttpClient ahc = new AsyncHttpClient();
-				ahc.get(url, new BinaryHttpResponseHandler(){
-					@Override
-					public void onSuccess(byte[] data) {
-						try {
-							BitmapFactory.Options opts = new BitmapFactory.Options();
-							BitmapFactory.decodeByteArray(data, 0, data.length, opts);
-							opts.inJustDecodeBounds = true;
-							opts.inSampleSize = calculateInSampleSize(opts,100,100);
-							
-							opts.inJustDecodeBounds = false;
-							final Bitmap tmpBitmap = BitmapFactory.decodeByteArray(data, 0, data.length, opts);
-							
-							GoodsItemActivity.this.runOnUiThread(new Thread(){
-								public void run() {
-									imageView.setImageBitmap(tmpBitmap);
-								};
-							});
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			};
-		}.start();
-	}
-	
-	private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-		final int height = options.outHeight;  
-		final int width = options.outWidth;  
-		int inSampleSize = 1;  
-	  
-		if (height > reqHeight || width > reqWidth) {  
-			if (width > height) {  
-				inSampleSize = Math.round((float)height / (float)reqHeight);  
-			} else {  
-				inSampleSize = Math.round((float)width / (float)reqWidth);  
-			}
-		}
-		return inSampleSize;  
-	} 
 }

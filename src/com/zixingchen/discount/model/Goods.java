@@ -17,6 +17,7 @@ public class Goods implements Serializable{
 	private String subTitle;//商品子标题
 	private String descript;//商品说明
 	private String icon;//图标
+	private String href;//商品的URL
 
 	public Goods() {
 	}
@@ -87,5 +88,13 @@ public class Goods implements Serializable{
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public String getHref() {
+		return href;
+	}
+
+	public void setHref(String href) {
+		this.href = href;
 	}
 }
