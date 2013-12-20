@@ -41,9 +41,6 @@ public class MainActivity extends Activity{
 		btRefresh = (Button) this.findViewById(R.id.btRefresh);
 		btAdd = (Button) this.findViewById(R.id.btAdd);
 		getWindow().setWindowAnimations(0);
-		
-		//初始化数据库
-		new DBHelp(this,DBHelp.VERSION).getReadableDatabase();
 	}
 	/**
 	 * 刷新关注的列表

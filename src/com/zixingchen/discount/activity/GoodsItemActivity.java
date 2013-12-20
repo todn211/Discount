@@ -1,8 +1,9 @@
 package com.zixingchen.discount.activity;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,30 +19,25 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.nostra13.universalimageloader.cache.disc.impl.TotalSizeLimitedDiscCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsItemBusiness;
 import com.zixingchen.discount.common.Page;
 import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
+import com.zixingchen.discount.utils.ImageLoaderUtils;
 
 /**
  * 商品项页面
  * @author 陈梓星
  */
+@SuppressLint("HandlerLeak")
 public class GoodsItemActivity extends Activity implements OnItemClickListener{
 
 	private List<Goods> goodses;//商品集合 
 	private ListView lvGoodsItem;//商品列表
 	private GoodsType goodsType;//所属商品类型对象
 	private GoodsItemHandler handler = new GoodsItemHandler();
-	private static ImageLoader imageLoader;//图片加载器
+	private GoodsItemBusiness bussiness = new GoodsItemBusiness();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +45,6 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 		setContentView(R.layout.goods_item_activity);
 		
 		Intent intent = this.getIntent();
-		
-		//初始化图片加载器
-		initImageLoader();
 		
 		//初始化商品类型对象
 		goodsType = (GoodsType) intent.getSerializableExtra("goodsType");
@@ -65,47 +58,19 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	}
 	
 	/**
-	 * 初始化图片加载器
-	 */
-	private void initImageLoader(){
-		if(imageLoader == null){
-			DisplayImageOptions options = new DisplayImageOptions.Builder()
-	        .showImageOnLoading(R.drawable.ic_launcher)
-	        .showImageForEmptyUri(R.drawable.ic_launcher)
-	        .showImageOnFail(R.drawable.ic_launcher)
-	        .cacheInMemory(true)
-	        .cacheOnDisc(true)
-	        .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//图片缩放方式
-	        .displayer(new RoundedBitmapDisplayer(5))//图片圆角
-	        .build();
-			
-			File cacheDir = StorageUtils.getCacheDirectory(this);
-			ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-												.defaultDisplayImageOptions(options)
-			 									.discCache(new TotalSizeLimitedDiscCache(cacheDir,10485760))
-			 									.discCacheSize(10485760)//内存卡缓存10M图片
-//			 									.memoryCacheSize(10485760)//内存缓存10M图片
-//			 									.memoryCacheSize(memoryCacheSize)
-												.build();
-			
-			imageLoader = ImageLoader.getInstance();
-			imageLoader.init(config);
-		}
-	}
-	
-	/**
 	 * 初始化商品列表
 	 */
 	private void initLvGoodsItem(){
 		lvGoodsItem = (ListView) this.findViewById(R.id.lvGoodsItem);
 		lvGoodsItem.setOnItemClickListener(this);
+		goodses = new ArrayList<Goods>();
+		lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
 		
 		//远程加载商品列表
 		new Thread(){
 			public void run() {
 				try {
-					GoodsItemBusiness bussiness = new GoodsItemBusiness(GoodsItemActivity.this);
-					goodses = bussiness.findGoodsByGoodsType(goodsType, new Page(),handler);
+					bussiness.findGoodsByGoodsType(goodsType, new Page<Goods>(),handler);
 				} catch (Exception e) {
 					e.printStackTrace();
 					Message msg = Message.obtain();
@@ -178,12 +143,20 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	 * 商品项列表消息分配器、处理器
 	 * @author 陈梓星
 	 */
+	@SuppressWarnings("unchecked")
 	private class GoodsItemHandler extends Handler{
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case GoodsItemBusiness.FIND_GOODS_SUCCESS:
-				lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
+				Page<Goods> page = (Page<Goods>)msg.obj;
+				List<Goods> newDatas = ((Page<Goods>)msg.obj).getDatas();
+				if(newDatas != null && newDatas.size()>0){
+					goodses.addAll(newDatas);
+					LvGoodsItemAdapter adapter = ((LvGoodsItemAdapter)lvGoodsItem.getAdapter());
+					adapter.setPage(page.clonePageNotDatas());
+					adapter.notifyDataSetChanged();
+				}
 				break;
 			case GoodsItemBusiness.FIND_GOODS_FAILURE:
 				Toast.makeText(GoodsItemActivity.this, "加载商品列表失败！", Toast.LENGTH_LONG).show();
@@ -197,6 +170,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	 * @author 陈梓星
 	 */
 	private class LvGoodsItemAdapter extends BaseAdapter{
+		private Page<Goods> page;
 
 		@Override
 		public int getCount() {
@@ -225,8 +199,18 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 			Goods goods = goodses.get(position);
 			tvName.setText(goods.getName());
 			tvPrice.setText("￥" + goods.getCurrentPrice());
-			imageLoader.displayImage(goods.getIcon(), ivGoodsIcon);
+			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivGoodsIcon);
+			
+			//判断当前下标是否到达倒数第三个，且判断当前页是不是最后一页，如果不是最后一页就加载下一页的数据
+			if(position == goodses.size()-3 && !page.isLastPage()){
+				page.setPageNumber(page.getPageNumber() + 1);
+				bussiness.findGoodsByGoodsType(goodsType, page,handler);
+			}
 			return convertView;
+		}
+		
+		public void setPage(Page<Goods> page){
+			this.page = page;
 		}
 	}
 }

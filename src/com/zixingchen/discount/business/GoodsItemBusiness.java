@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -36,11 +35,11 @@ public class GoodsItemBusiness {
 	 */
 	public static final int FIND_GOODS_SUCCESS = 1;
 	
-	private Context context;
+	/**
+	 * 是否加载了所有数据（已经没有下一页）
+	 */
+	public static final int IS_ALL_DATA = 1;
 	
-	public GoodsItemBusiness(Context context) {
-		this.context = context;
-	}
 	
 	/**
 	 * 创建参数对象
@@ -51,6 +50,8 @@ public class GoodsItemBusiness {
 		params.put("_input_charset", "UTF-8");
 		params.put("style", "list");
 		params.put("json", "on");
+		params.put("module", "page");
+		params.put("data-key", "s");
 		return params;
 	}
 	
@@ -58,56 +59,66 @@ public class GoodsItemBusiness {
 	 * 根据商品类型获取相应的商品列表
 	 * @param goodsType 商品类型
 	 * @param page 分页对象
-	 * @param handler 消息分配器
-	 * @return 商品列表
-	 * @throws Exception 
+	 * @param handler 消息分配器，负责把查询出来的结果返回给调用者
+	 * @throws Exception
 	 */
-	public List<Goods> findGoodsByGoodsType(GoodsType goodsType,Page page,final Handler handler) throws Exception{
+	public void findGoodsByGoodsType(GoodsType goodsType,final Page<Goods> page,final Handler handler){
 		final List<Goods> goodses = new ArrayList<Goods>();
 		
-//		String url = "http://list.taobao.com/itemlist/default.htm?_input_charset=UTF-8&style=list&json=on&pSize=20&cat=1512&data-value=0&q=Huawei/华为";
-		
-		
-//		http://a.m.tmall.com/i35449113053.htm?rn=8L78nC3Z1-IjoQwKY392SltHvBrD-kgmVMQO-hSb3&sid=cd539ba836122f9d&abtest=4
-//		http://detail.tmall.com/item.htm?spm=a2106.m872.1000384.9.L96CSe&id=35017764426&source=dou&scm=1029.newlist-0.1.1512&ppath=&sku=&ug=
-		
-		RequestParams params = createBaseParams();
-		params.put("pSize", String.valueOf(page.getPageSize()));//每页显示行数
-		params.put("data-value", String.valueOf(page.getStartRecord()));//从哪行开始获取数据
-		params.put("cat", goodsType.getTypeCode());
-		if(!TextUtils.isEmpty(goodsType.getKeyWord()))
-			params.put("q", URLEncoder.encode(goodsType.getKeyWord(), "UTF-8"));
-		
-		String url = TaobaoUtil.GOODS_ITEM_LIST_URL + "?" + params.toString();
-		
-		AsyncHttpClient ahc = new AsyncHttpClient();
-		ahc.get(url, new JsonHttpResponseHandler(){
-			@Override
-			public void onSuccess(JSONObject response) {
-				try {
-					if(!response.isNull("itemList")){
-						JSONArray goodsItems = response.getJSONArray("itemList");
-						addGoodsToList(goodses, goodsItems);
+		try {
+			RequestParams params = createBaseParams();
+			params.put("data-value", String.valueOf(page.getStartRecord()));//从哪行开始获取数据
+			params.put("pSize", String.valueOf(page.getPageSize()));//每页显示行数
+			params.put("cat", goodsType.getTypeCode());
+			if(!TextUtils.isEmpty(goodsType.getKeyWord()))
+				params.put("q", URLEncoder.encode(goodsType.getKeyWord(), "UTF-8"));
+			
+			String url = TaobaoUtil.GOODS_ITEM_LIST_URL + "?" + params.toString();
+			
+			AsyncHttpClient ahc = new AsyncHttpClient();
+			ahc.get(url, new JsonHttpResponseHandler(){
+				@Override
+				public void onSuccess(JSONObject response) {
+					try {
+						if(!response.isNull("itemList")){
+							JSONArray goodsItems = response.getJSONArray("itemList");
+							addGoodsToList(goodses, goodsItems);
+						}
+						
+						if(!response.isNull("mallItemList")){
+							JSONArray goodsItems = response.getJSONArray("mallItemList");
+							addGoodsToList(goodses, goodsItems);
+						}
+						
+						if(!response.isNull("page")){
+							JSONObject pageJSON = response.getJSONObject("page");
+							if(!pageJSON.isNull("currentPage"))
+								page.setPageNumber(pageJSON.getInt("currentPage"));
+							
+							if(!pageJSON.isNull("totalPage"))
+								page.setTotalPage(pageJSON.getInt("totalPage"));
+						}
+						
+						page.setDatas(goodses);
+						
+						Message msg = Message.obtain();
+						msg.what = FIND_GOODS_SUCCESS;
+						msg.obj = page;
+						handler.sendMessage(msg);
+					} catch (Exception e) {
+						e.printStackTrace();
+						Message msg = Message.obtain();
+						msg.what = FIND_GOODS_FAILURE;
+						handler.sendMessage(msg);
 					}
-					
-					if(!response.isNull("mallItemList")){
-						JSONArray goodsItems = response.getJSONArray("mallItemList");
-						addGoodsToList(goodses, goodsItems);
-					}
-					
-					Message msg = Message.obtain();
-					msg.what = FIND_GOODS_SUCCESS;
-					handler.sendMessage(msg);
-				} catch (Exception e) {
-					e.printStackTrace();
-					Message msg = Message.obtain();
-					msg.what = FIND_GOODS_FAILURE;
-					handler.sendMessage(msg);
 				}
-			}
-		});
-		
-		return goodses;
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+			Message msg = Message.obtain();
+			msg.what = FIND_GOODS_FAILURE;
+			handler.sendMessage(msg);
+		}
 	}
 	
 	/**
