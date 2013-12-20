@@ -18,14 +18,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btRefresh"
+            android:id="@+id/btBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/cornersButton"
-            android:text="@string/refresh"
+            android:text="@string/back"
             android:drawableLeft="@drawable/refresh_icon"
             android:drawablePadding="5dp"
-            android:onClick="onBtRefreshClick"/>
+            android:onClick="onBtBackClick"/>
             
         
         <TextView 
@@ -40,14 +40,14 @@
             />
 
         <Button
-            android:id="@+id/btAdd"
+            android:id="@+id/btFocusGoods"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/cornersButton"
             android:drawableLeft="@drawable/add_icon"
             android:drawablePadding="5dp"
-            android:text="@string/addAttention" 
-            android:onClick="onBtAddClick"/>
+            android:text="@string/focus" 
+            android:onClick="onBtFocusGoodsClick"/>
     </LinearLayout>
     
     <WebView 

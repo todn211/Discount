@@ -42,7 +42,7 @@
             android:layout_marginRight="10dp"
             android:focusable="false"
             android:onClick="attentionGoods"
-            android:text="@string/attention" 
+            android:text="@string/focus" 
             android:drawableLeft="@drawable/add_green_icon"/>
     </LinearLayout>
 

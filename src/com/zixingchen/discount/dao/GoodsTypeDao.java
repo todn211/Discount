@@ -32,27 +32,27 @@ public class GoodsTypeDao {
 		StringBuilder sql = new StringBuilder("select * from goods_type where 1=1 ");
 		if(filter != null){
 			if(filter.getId() != null){
-				sql.append("and id=? ");
+				sql.append("and ID=? ");
 				args.add(String.valueOf(filter.getId()));
 			}
 			
 			if(filter.getParentId() != null){
-				sql.append("and parent_id=? ");
+				sql.append("and PARENT_ID=? ");
 				args.add(String.valueOf(filter.getParentId()));
 			}
 			
 			if(!TextUtils.isEmpty(filter.getName())){
-				sql.append("and name=? ");
+				sql.append("and NAME=? ");
 				args.add(filter.getName());
 			}
 			
 			if(!TextUtils.isEmpty(filter.getTypeCode())){
-				sql.append("and type_code=? ");
+				sql.append("and TYPE_CODE=? ");
 				args.add(filter.getTypeCode());
 			}
 			
 			if(!TextUtils.isEmpty(filter.getKeyWord())){
-				sql.append("and key_word=?");
+				sql.append("and KEY_WORD=?");
 				args.add(filter.getKeyWord());
 			}
 		}
@@ -65,12 +65,12 @@ public class GoodsTypeDao {
 			if(cursor.getCount() > 0){
 				goodsTypes = new ArrayList<GoodsType>(cursor.getCount());
 				while(cursor.moveToNext()){
-					Long id = cursor.getLong(cursor.getColumnIndex("id"));
-					Long parentId = cursor.getLong(cursor.getColumnIndex("parent_id"));
-					String name = cursor.getString(cursor.getColumnIndex("name"));
-					String typeCode = cursor.getString(cursor.getColumnIndex("type_code"));
-					String keyWord = cursor.getString(cursor.getColumnIndex("key_word"));
-					String isLeaf = cursor.getString(cursor.getColumnIndex("is_leaf"));
+					Long id = cursor.getLong(cursor.getColumnIndex("ID"));
+					Long parentId = cursor.getLong(cursor.getColumnIndex("PARENT_ID"));
+					String name = cursor.getString(cursor.getColumnIndex("NAME"));
+					String typeCode = cursor.getString(cursor.getColumnIndex("TYPE_CODE"));
+					String keyWord = cursor.getString(cursor.getColumnIndex("KEY_WORD"));
+					String isLeaf = cursor.getString(cursor.getColumnIndex("IS_LEAF"));
 					
 					GoodsType goodsType = new GoodsType(id,parentId,name,typeCode,keyWord,isLeaf);
 					goodsTypes.add(goodsType);

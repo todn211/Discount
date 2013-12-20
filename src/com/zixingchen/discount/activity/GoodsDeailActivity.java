@@ -2,6 +2,7 @@ package com.zixingchen.discount.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -43,5 +44,22 @@ public class GoodsDeailActivity extends Activity {
 			}
 		});
 		wvGoodsDetail.loadUrl(goodsItem.getHref());
+	}
+	
+	/**
+	 * 返回上一级
+	 * @param view
+	 */
+	public void onBtBackClick(View view){
+		this.finish();
+		this.overridePendingTransition(R.anim.in_from_left,R.anim.out_to_right);
+	}
+	
+	/**
+	 * 关注商品
+	 * @param view
+	 */
+	public void onBtFocusGoodsClick(View view){
+		
 	}
 }

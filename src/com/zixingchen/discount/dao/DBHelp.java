@@ -33,13 +33,33 @@ public class DBHelp extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// 创建商品类型表
+		//创建商品类型表
 		this.createGoodsTypeTable(db);
+		
+		//创建商品关注表
+		this.createFocusGoods(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+	}
+	
+	/**
+	 * 创建商品关注表
+	 */
+	private void createFocusGoods(SQLiteDatabase db){
+		try {
+			String sql = tableXMLParser(R.xml.focus_goods);
+			
+			db.beginTransaction();
+			db.execSQL(sql);
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			db.endTransaction();
+		}
 	}
 
 	/**
@@ -96,16 +116,16 @@ public class DBHelp extends SQLiteOpenHelper {
 	 */
 	private Long insertGoodsType(SQLiteDatabase db,JSONObject goodstypeJSON,long parentId,String isLeaf) throws Exception{
 		ContentValues values = new ContentValues();
-		values.put("name", goodstypeJSON.getString("name"));
-		values.put("parent_id", parentId);
-		values.put("is_leaf", isLeaf);
+		values.put("NAME", goodstypeJSON.getString("name"));
+		values.put("PARENT_ID", parentId);
+		values.put("IS_LEAF", isLeaf);
 		
 		if(!goodstypeJSON.isNull("cat")){
-			values.put("type_code", goodstypeJSON.getString("cat"));
+			values.put("TYPE_CODE", goodstypeJSON.getString("cat"));
 		}
 		
 		if(!goodstypeJSON.isNull("query")){
-			values.put("key_word", goodstypeJSON.getString("query").replace("/", " "));
+			values.put("KEY_WORD", goodstypeJSON.getString("query").replace("/", " "));
 		}
 		
 		long rowId = db.insert("goods_type", null, values);
@@ -113,7 +133,7 @@ public class DBHelp extends SQLiteOpenHelper {
 		if(rowId == -1)
 			throw new SQLException("插入商品类型失败！！");
 		
-		Cursor cursor = db.rawQuery("select max(id) from goods_type", null);
+		Cursor cursor = db.rawQuery("select max(ID) from goods_type", null);
 		cursor.moveToNext();
 		Long id = cursor.getLong(0);
 		cursor.close();

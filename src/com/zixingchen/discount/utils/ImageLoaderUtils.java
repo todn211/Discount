@@ -20,23 +20,23 @@ public class ImageLoaderUtils {
 	static{
 		if(imageLoader == null){
 			DisplayImageOptions options = new DisplayImageOptions.Builder()
-	        .showImageOnLoading(R.drawable.ic_launcher)
-	        .showImageForEmptyUri(R.drawable.ic_launcher)
-	        .showImageOnFail(R.drawable.ic_launcher)
-	        .cacheInMemory(true)
-	        .cacheOnDisc(true)
-	        .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//图片缩放方式
-	        .displayer(new RoundedBitmapDisplayer(5))//图片圆角
-	        .build();
+										        .showImageOnLoading(R.drawable.ic_launcher)
+										        .showImageForEmptyUri(R.drawable.ic_launcher)
+										        .showImageOnFail(R.drawable.ic_launcher)
+										        .cacheInMemory(true)
+										        .cacheOnDisc(true)
+										        .imageScaleType(ImageScaleType.EXACTLY_STRETCHED)//图片缩放方式
+										        .displayer(new RoundedBitmapDisplayer(5))//图片圆角
+										        .build();
 			
 			File cacheDir = StorageUtils.getCacheDirectory(ContextUtil.getInstance());
 			ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(ContextUtil.getInstance())
-												.defaultDisplayImageOptions(options)
-			 									.discCache(new TotalSizeLimitedDiscCache(cacheDir,10485760))
-			 									.discCacheSize(10485760)//内存卡缓存10M图片
-//			 									.memoryCacheSize(10485760)//内存缓存10M图片
-//			 									.memoryCacheSize(memoryCacheSize)
-												.build();
+													.defaultDisplayImageOptions(options)
+				 									.discCache(new TotalSizeLimitedDiscCache(cacheDir,10485760))
+				 									.discCacheSize(10485760)//内存卡缓存10M图片
+//				 									.memoryCacheSize(10485760)//内存缓存10M图片
+//				 									.memoryCacheSize(memoryCacheSize)
+													.build();
 			
 			imageLoader = ImageLoader.getInstance();
 			imageLoader.init(config);

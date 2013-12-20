@@ -15,7 +15,6 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.zixingchen.discount.R;
-import com.zixingchen.discount.dao.DBHelp;
 import com.zixingchen.discount.model.Goods;
 
 /**

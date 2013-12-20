@@ -21,7 +21,7 @@ public class StreamUtil {
 		String line = null;
 		try {
 			while ((line = reader.readLine()) != null) {
-				sb.append(line + "/n");
+				sb.append(line + "\n");
 			}
 		} catch (IOException e) {
 			return null;
