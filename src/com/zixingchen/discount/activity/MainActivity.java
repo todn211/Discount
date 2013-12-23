@@ -1,12 +1,10 @@
 package com.zixingchen.discount.activity;
 
 import java.util.List;
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -16,6 +14,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsBusiness;
 import com.zixingchen.discount.business.GoodsTypeBusiness;
@@ -68,7 +67,6 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		Intent intent = new Intent(this,GoodsTypeActivity.class);
 		intent.putExtra("prevActivityIsMain", true);
 		this.startActivity(intent);
-//		this.startActivityFromChild(child, intent, requestCode);ActivityOptions
 		this.overridePendingTransition(R.anim.in_from_bottom,R.anim.no_anim);
 	}
 	

@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -233,7 +232,8 @@ public class GoodsBusiness {
 					TextView textView = (TextView) msg.obj;
 					textView.setText("当前价格：" + 100.55);
 					break;
-					
+				
+				//添加商品列表到前台展示
 				case GoodsBusiness.FIND_GOODS_SUCCESS:
 					Map<String,Object> params = (Map<String, Object>) msg.obj;
 					Page<Goods> page = (Page<Goods>)params.get("page");
@@ -245,7 +245,8 @@ public class GoodsBusiness {
 						adapter.notifyDataSetChanged();
 					}
 					break;
-					
+				
+				//加载商品列表失败
 				case GoodsBusiness.FIND_GOODS_FAILURE:
 					Toast.makeText(ContextUtil.getInstance(), "加载商品列表失败！", Toast.LENGTH_LONG).show();
 					break;

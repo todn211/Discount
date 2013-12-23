@@ -1,6 +1,5 @@
 package com.zixingchen.discount.activity;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,8 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -18,7 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsBusiness;
@@ -63,7 +59,7 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 	private void initLvGoodsItem(){
 		lvGoodsList = (ListView) this.findViewById(R.id.lvGoodsList);
 		lvGoodsList.setOnItemClickListener(this);
-		adapter = new LvGoodsListAdapter();
+		adapter = new LvGoodsListAdapter(null);
 		lvGoodsList.setAdapter(adapter);
 		
 		//远程加载商品列表
@@ -136,8 +132,11 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 		private Page<Goods> page;
 		private List<Goods> datas;//商品集合
 		
-		public LvGoodsListAdapter() {
-			this.datas = new ArrayList<Goods>();
+		public LvGoodsListAdapter(List<Goods> datas) {
+			if(datas == null)
+				this.datas = new ArrayList<Goods>();
+			else
+				this.datas = datas;
 		}
 
 		@Override
