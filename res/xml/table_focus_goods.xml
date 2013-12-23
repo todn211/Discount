@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<table>
+	create table focus_goods (
+		ID integer not null primary key autoincrement, 
+		GOODS_TYPE_ID integer not null, 
+		NAME varchar, 
+		SUB_TITLE varchar, 
+		PRE_PRICE float, 
+		CURRENT_PRICE float, 
+		ICON varchar, 
+		DESCRIPT varchar, 
+		HREF varchar not null
+	)
+</table>
