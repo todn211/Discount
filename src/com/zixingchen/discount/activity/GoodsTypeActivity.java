@@ -120,7 +120,7 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 		Intent intent = null;
 		//如果商品类型是最后一级，就切换到商品页面，否则依然在商品类型页面切换
 		if(GoodsType.YES.equals(goodsType.isLeaf())){
-			intent = new Intent(this,GoodsItemActivity.class);
+			intent = new Intent(this,GoodsListActivity.class);
 		}else{
 			intent = new Intent(this,GoodsTypeActivity.class);
 		}

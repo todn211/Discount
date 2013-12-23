@@ -30,7 +30,7 @@ import com.zixingchen.discount.utils.ImageLoaderUtils;
  */
 public class MainActivity extends Activity implements OnGroupExpandListener,OnChildClickListener{
 	
-	private ExpandableListView lvMyAttention;//关注的列表
+	private ExpandableListView lvMyFocus;//关注的列表
 	private List<GoodsType> goodsTypes;//关注的商品类型集合
 //	private List<List<Goods>> goodses;//关注的商品集合
 	private Button btRefresh;//刷新
@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		goodsBusiness = new GoodsBusiness();
 		
 		//初始化关注列表 
-		initLvMyAttention();
+		initLvlvMyFocus();
 		
 		btRefresh = (Button) this.findViewById(R.id.btRefresh);
 		btAdd = (Button) this.findViewById(R.id.btAdd);
@@ -76,18 +76,18 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	/**
 	 * 初始化关注列表
 	 */
-	private void initLvMyAttention(){
-		lvMyAttention = (ExpandableListView)this.findViewById(R.id.lvMyAttention);
+	private void initLvlvMyFocus(){
+		lvMyFocus = (ExpandableListView)this.findViewById(R.id.lvMyFocus);
 		
 		//初始化商品类型集合数据
 		if(goodsTypes == null || goodsTypes.size() == 0){
 			goodsTypes = goodsTypeBusiness.findFocusGoodsTypes();
 		}
 		
-		lvMyAttention.setAdapter(new LvMyAttentionAdapter());
-		lvMyAttention.setOnGroupExpandListener(this);
-		lvMyAttention.setOnChildClickListener(this);
-		lvMyAttention.expandGroup(0);//默认展开系统一项
+		lvMyFocus.setAdapter(new lvMyFocusAdapter());
+		lvMyFocus.setOnGroupExpandListener(this);
+		lvMyFocus.setOnChildClickListener(this);
+		lvMyFocus.expandGroup(0);//默认展开系统一项
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 */
 	@Override
 	public void onGroupExpand(int groupPosition) {
-		LvMyAttentionAdapter adapter = (LvMyAttentionAdapter)lvMyAttention.getExpandableListAdapter();
+		lvMyFocusAdapter adapter = (lvMyFocusAdapter)lvMyFocus.getExpandableListAdapter();
 		
 		if(!adapter.isExpand[groupPosition]){
 			GoodsType goodsType = goodsTypes.get(groupPosition);
@@ -122,10 +122,10 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * 商品列表适配器
 	 * @author XING
 	 */
-	private class LvMyAttentionAdapter extends BaseExpandableListAdapter{
+	private class lvMyFocusAdapter extends BaseExpandableListAdapter{
 		private boolean[] isExpand;
 		
-		public LvMyAttentionAdapter() {
+		public lvMyFocusAdapter() {
 			isExpand = new boolean[getGroupCount()];
 		}
 		
@@ -167,7 +167,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		@Override
 		public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 			if(convertView == null){
-				convertView = MainActivity.this.getLayoutInflater().inflate(R.layout.lv_my_attention_group, parent,false);
+				convertView = MainActivity.this.getLayoutInflater().inflate(R.layout.lv_my_focus_group, parent,false);
 			}
 			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
 			tvName.setText(goodsTypes.get(groupPosition).getName());
@@ -177,7 +177,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		@Override
 		public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 			if(convertView == null){
-				convertView = MainActivity.this.getLayoutInflater().inflate(R.layout.lv_my_attention_child, parent,false);
+				convertView = MainActivity.this.getLayoutInflater().inflate(R.layout.lv_my_focus_child, parent,false);
 			}
 			Goods goods = goodsTypes.get(groupPosition).getGoodses().get(childPosition);
 			

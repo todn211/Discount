@@ -31,7 +31,7 @@ import com.zixingchen.discount.utils.ImageLoaderUtils;
  * @author 陈梓星
  */
 @SuppressLint("HandlerLeak")
-public class GoodsItemActivity extends Activity implements OnItemClickListener{
+public class GoodsListActivity extends Activity implements OnItemClickListener{
 
 	private List<Goods> goodses;//商品集合 
 	private ListView lvGoodsItem;//商品列表
@@ -42,7 +42,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.goods_item_activity);
+		setContentView(R.layout.goods_list_activity);
 		
 		Intent intent = this.getIntent();
 		
@@ -61,7 +61,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	 * 初始化商品列表
 	 */
 	private void initLvGoodsItem(){
-		lvGoodsItem = (ListView) this.findViewById(R.id.lvGoodsItem);
+		lvGoodsItem = (ListView) this.findViewById(R.id.lvGoodsList);
 		lvGoodsItem.setOnItemClickListener(this);
 		goodses = new ArrayList<Goods>();
 		lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
@@ -159,7 +159,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 				}
 				break;
 			case GoodsBusiness.FIND_GOODS_FAILURE:
-				Toast.makeText(GoodsItemActivity.this, "加载商品列表失败！", Toast.LENGTH_LONG).show();
+				Toast.makeText(GoodsListActivity.this, "加载商品列表失败！", Toast.LENGTH_LONG).show();
 				break;
 			}
 		}
@@ -190,7 +190,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if(convertView == null)
-				convertView = GoodsItemActivity.this.getLayoutInflater().inflate(R.layout.lv_goods_item, parent,false);
+				convertView = GoodsListActivity.this.getLayoutInflater().inflate(R.layout.lv_goods_list_item, parent,false);
 			
 			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
 			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);

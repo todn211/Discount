@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">货比三家</string>
-    <string name="myAttention">我的关注</string>
+    <string name="myFocus">我的关注</string>
     <string name="allGoodsType">全部商品类型</string>
     <string name="systemSetting">系统设置</string>
     <string name="imgContentDescript">图片说明</string>

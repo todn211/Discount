@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".GoodsItemActivity"
+    tools:context=".GoodsListActivity"
     android:background="@drawable/goods_type_bg"
     android:id="@+id/goodsSelectedContainer">
 

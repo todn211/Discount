@@ -31,7 +31,7 @@
         <TextView 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/myAttention"
+            android:text="@string/myFocus"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="16sp"

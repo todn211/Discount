@@ -49,7 +49,7 @@
     </LinearLayout>
     
     <ListView
-        android:id="@+id/lvGoodsItem"
+        android:id="@+id/lvGoodsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:cacheColorHint="#00000000"/>
