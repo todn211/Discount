@@ -3,12 +3,13 @@ package com.zixingchen.discount.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
+import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
+import com.zixingchen.discount.utils.ContextUtil;
 
 /**
  * 商品类别数据库操作类
@@ -17,8 +18,56 @@ import com.zixingchen.discount.model.GoodsType;
 public class GoodsTypeDao {
 	private DBHelp dbHelp;
 	
-	public GoodsTypeDao(Context context) {
-		this.dbHelp = new DBHelp(context, DBHelp.VERSION);
+	public GoodsTypeDao() {
+		this.dbHelp = new DBHelp(ContextUtil.getInstance(), DBHelp.VERSION);
+	}
+	
+	/**
+	 * 查询已关注的商品类别
+	 * @return 已关注的商品类别集合
+	 */
+	public List<GoodsType> findFocusGoodsTypes(){
+		List<GoodsType> goodsTypes = new ArrayList<GoodsType>();
+		String sql = "select * from goods_type where ID in ("
+				+ "select max(goodsType.ID) as goods_type_id from goods_type goodsType join "
+				+ "focus_goods focusGoods on goodsType.id = focusGoods.goods_type_id "
+				+ "group by focusGoods.id"
+				+ ")";
+		
+		SQLiteDatabase db = dbHelp.getReadableDatabase();
+		Cursor cursor = null;
+		try {
+			cursor = db.rawQuery(sql, null);
+			
+			if(cursor.getCount() > 0){
+				while(cursor.moveToNext()){
+					Long id = cursor.getLong(cursor.getColumnIndex("ID"));
+					Long parentId = cursor.getLong(cursor.getColumnIndex("PARENT_ID"));
+					String name = cursor.getString(cursor.getColumnIndex("NAME"));
+					String typeCode = cursor.getString(cursor.getColumnIndex("TYPE_CODE"));
+					String keyWord = cursor.getString(cursor.getColumnIndex("KEY_WORD"));
+					String isLeaf = cursor.getString(cursor.getColumnIndex("IS_LEAF"));
+					
+					GoodsType goodsType = new GoodsType(id,parentId,name,typeCode,keyWord,isLeaf);
+					goodsType.setGoodses(new ArrayList<Goods>());
+					goodsTypes.add(goodsType);
+					
+					
+					System.out.println(name);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			if(cursor != null)
+				cursor.close();
+			
+			if(db != null)
+				db.close();
+		}
+		
+		return goodsTypes;
 	}
 	
 	/**

@@ -72,6 +72,16 @@ public class GoodsBusiness {
 	}
 	
 	/**
+	 * 根据商品类型获取相应关注的商品列表
+	 * @param goodsType 商品类型
+	 * @param page 分页对象
+	 * @return 关注的商品列表
+	 */
+	public List<Goods> findFocusGoodsByGoodsType(final GoodsType goodsType,final Page<Goods> page){
+		return goodsDao.findFocusGoodsByGoodsType(goodsType, page);
+	}
+	
+	/**
 	 * 根据商品类型获取相应的商品列表
 	 * @param goodsType 商品类型
 	 * @param page 分页对象

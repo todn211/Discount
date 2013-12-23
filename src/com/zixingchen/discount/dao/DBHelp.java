@@ -50,7 +50,7 @@ public class DBHelp extends SQLiteOpenHelper {
 	 */
 	private void createFocusGoods(SQLiteDatabase db){
 		try {
-			String sql = tableXMLParser(R.xml.focus_goods);
+			String sql = tableXMLParser(R.xml.table_focus_goods);
 			
 			db.beginTransaction();
 			db.execSQL(sql);
