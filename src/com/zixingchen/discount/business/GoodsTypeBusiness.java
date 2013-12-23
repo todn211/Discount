@@ -14,8 +14,16 @@ import com.zixingchen.discount.model.GoodsType;
 public class GoodsTypeBusiness {
 	private GoodsTypeDao dao;
 	
-	public GoodsTypeBusiness(Context context) {
-		this.dao = new GoodsTypeDao(context);
+	public GoodsTypeBusiness() {
+		this.dao = new GoodsTypeDao();
+	}
+	
+	/**
+	 * 查询已关注的商品类别
+	 * @return 已关注的商品类别集合
+	 */
+	public List<GoodsType> findFocusGoodsTypes(){
+		return dao.findFocusGoodsTypes();
 	}
 	
 	/**

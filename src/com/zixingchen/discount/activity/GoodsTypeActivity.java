@@ -90,7 +90,7 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 				public void run() {
 					try {
 						//获取商品类型集合
-						GoodsTypeBusiness goodsTypeBusiness = new GoodsTypeBusiness(GoodsTypeActivity.this);
+						GoodsTypeBusiness goodsTypeBusiness = new GoodsTypeBusiness();
 						if(parentGoodsType == null)
 							goodsTypes = goodsTypeBusiness.findGoodsTypesByParentId(0L);
 						else

@@ -3,10 +3,9 @@
 	create table focus_goods (
 		ID integer not null primary key autoincrement, 
 		GOODS_TYPE_ID integer not null, 
-		NAME varchar, 
+		NAME varchar not null, 
 		SUB_TITLE varchar, 
-		PRE_PRICE float, 
-		CURRENT_PRICE float, 
+		PRICE float not null, 
 		ICON varchar, 
 		DESCRIPT varchar, 
 		HREF varchar not null

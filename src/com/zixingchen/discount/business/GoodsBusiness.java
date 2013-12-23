@@ -16,15 +16,16 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.zixingchen.discount.common.Page;
+import com.zixingchen.discount.dao.GoodsDao;
 import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
 import com.zixingchen.discount.utils.TaobaoUtil;
 
 /**
- * 商品列表逻辑处理类
+ * 商品逻辑处理类
  * @author 陈梓星
  */
-public class GoodsItemBusiness {
+public class GoodsBusiness {
 	/**
 	 * 查找商品列表失败
 	 */
@@ -39,6 +40,12 @@ public class GoodsItemBusiness {
 	 * 是否加载了所有数据（已经没有下一页）
 	 */
 	public static final int IS_ALL_DATA = 1;
+	
+	private GoodsDao goodsDao;
+	
+	public GoodsBusiness() {
+		goodsDao = new GoodsDao();
+	}
 	
 	
 	/**
@@ -56,13 +63,32 @@ public class GoodsItemBusiness {
 	}
 	
 	/**
+	 * 添加关注关注商品
+	 * @param goods 要关注的商品
+	 * @return 添加成功返回true，否则返回false
+	 */
+	public boolean addFocusGoods(Goods goods){
+		return goodsDao.addFocusGoods(goods);
+	}
+	
+	/**
+	 * 根据商品类型获取相应关注的商品列表
+	 * @param goodsType 商品类型
+	 * @param page 分页对象
+	 * @return 关注的商品列表
+	 */
+	public List<Goods> findFocusGoodsByGoodsType(final GoodsType goodsType,final Page<Goods> page){
+		return goodsDao.findFocusGoodsByGoodsType(goodsType, page);
+	}
+	
+	/**
 	 * 根据商品类型获取相应的商品列表
 	 * @param goodsType 商品类型
 	 * @param page 分页对象
 	 * @param handler 消息分配器，负责把查询出来的结果返回给调用者
 	 * @throws Exception
 	 */
-	public void findGoodsByGoodsType(GoodsType goodsType,final Page<Goods> page,final Handler handler){
+	public void findGoodsByGoodsType(final GoodsType goodsType,final Page<Goods> page,final Handler handler){
 		final List<Goods> goodses = new ArrayList<Goods>();
 		
 		try {
@@ -82,12 +108,12 @@ public class GoodsItemBusiness {
 					try {
 						if(!response.isNull("itemList")){
 							JSONArray goodsItems = response.getJSONArray("itemList");
-							addGoodsToList(goodses, goodsItems);
+							addGoodsToList(goodses, goodsType.getId(), goodsItems);
 						}
 						
 						if(!response.isNull("mallItemList")){
 							JSONArray goodsItems = response.getJSONArray("mallItemList");
-							addGoodsToList(goodses, goodsItems);
+							addGoodsToList(goodses, goodsType.getId(), goodsItems);
 						}
 						
 						if(!response.isNull("page")){
@@ -127,11 +153,12 @@ public class GoodsItemBusiness {
 	 * @param goodsItems 商品集合的JSON对象
 	 * @throws JSONException
 	 */
-	private void addGoodsToList(final List<Goods> goodses,JSONArray goodsItems) throws JSONException {
+	private void addGoodsToList(final List<Goods> goodses, Long goodsTypeId,JSONArray goodsItems) throws JSONException {
 		for (int i=0; i<goodsItems.length();i++) {
 			Goods goods = new Goods();
 			JSONObject goodsItem = goodsItems.optJSONObject(i);
 			goods.setId(Long.parseLong(goodsItem.getString("itemId")));
+			goods.setGoodsTypeId(goodsTypeId);
 			goods.setName(goodsItem.getString("tip"));
 			goods.setCurrentPrice(Float.parseFloat(goodsItem.getString("currentPrice")));
 			goods.setIcon(goodsItem.getString("image") + "_sum.jpg");

@@ -9,7 +9,7 @@
     android:padding="3dp">
 
     <ImageView
-        android:id="@+id/ivGoodsIcon"
+        android:id="@+id/ivIcon"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="@string/imgContentDescript"

@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.zixingchen.discount.R;
+import com.zixingchen.discount.business.GoodsBusiness;
 import com.zixingchen.discount.model.Goods;
 
 /**
@@ -16,15 +17,16 @@ import com.zixingchen.discount.model.Goods;
 public class GoodsDeailActivity extends Activity {
 	
 	private WebView wvGoodsDetail;
-	private Goods goodsItem;
+	private Goods goods;
+	private GoodsBusiness bussiness = new GoodsBusiness();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.goods_detail_activity);
 		
-		//获取商品项对象
-		goodsItem = (Goods) this.getIntent().getSerializableExtra("GoodsItem");
+		//获取商品对象
+		goods = (Goods) this.getIntent().getSerializableExtra("GoodsItem");
 		
 		//初始化商品内容容器
 		initWvGoodsDetail();
@@ -43,7 +45,7 @@ public class GoodsDeailActivity extends Activity {
 				return true;
 			}
 		});
-		wvGoodsDetail.loadUrl(goodsItem.getHref());
+		wvGoodsDetail.loadUrl(goods.getHref());
 	}
 	
 	/**
@@ -60,6 +62,6 @@ public class GoodsDeailActivity extends Activity {
 	 * @param view
 	 */
 	public void onBtFocusGoodsClick(View view){
-		
+		bussiness.addFocusGoods(goods);
 	}
 }

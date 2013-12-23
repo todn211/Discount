@@ -1,6 +1,7 @@
 package com.zixingchen.discount.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 商品类型
@@ -19,6 +20,7 @@ public class GoodsType implements Serializable{
 	private String keyWord;//关键字，用于查询
 	private String icon;//商品图标
 	private String isLeaf;//是否为最后一级，N表示否，Y表示是
+	private List<Goods> goodses;//相关的商品
 	
 	public GoodsType() {
 		
@@ -74,5 +76,13 @@ public class GoodsType implements Serializable{
 	}
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
+	}
+
+	public List<Goods> getGoodses() {
+		return goodses;
+	}
+
+	public void setGoodses(List<Goods> goodses) {
+		this.goodses = goodses;
 	}
 }

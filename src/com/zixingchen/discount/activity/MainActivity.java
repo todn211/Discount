@@ -1,38 +1,50 @@
 package com.zixingchen.discount.activity;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ExpandableListView.OnGroupExpandListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zixingchen.discount.R;
+import com.zixingchen.discount.business.GoodsBusiness;
+import com.zixingchen.discount.business.GoodsTypeBusiness;
+import com.zixingchen.discount.common.Page;
 import com.zixingchen.discount.model.Goods;
+import com.zixingchen.discount.model.GoodsType;
+import com.zixingchen.discount.utils.ImageLoaderUtils;
 
 /**
  * 主页
  * @author 陈梓星
  */
-public class MainActivity extends Activity{
+public class MainActivity extends Activity implements OnGroupExpandListener,OnChildClickListener{
 	
 	private ExpandableListView lvMyAttention;//关注的列表
-	private List<Goods> goodsTypes;//关注的商品类型集合
-	private List<List<Goods>> goodses;//关注的商品集合
+	private List<GoodsType> goodsTypes;//关注的商品类型集合
+//	private List<List<Goods>> goodses;//关注的商品集合
 	private Button btRefresh;//刷新
 	private Button btAdd;//添加关注 
+	private GoodsTypeBusiness goodsTypeBusiness;
+	private GoodsBusiness goodsBusiness;
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.main_activity);
+		
+		goodsTypeBusiness = new GoodsTypeBusiness();
+		goodsBusiness = new GoodsBusiness();
 		
 		//初始化关注列表 
 		initLvMyAttention();
@@ -69,43 +81,41 @@ public class MainActivity extends Activity{
 		
 		//初始化商品类型集合数据
 		if(goodsTypes == null || goodsTypes.size() == 0){
-			goodsTypes = new ArrayList<Goods>();
-			
-			for (int i = 1; i <= 10; i++) {
-				Goods goodsType = new Goods();
-				goodsType.setId(Long.valueOf(i));
-				goodsType.setName("商品类型" + i);
-				goodsTypes.add(goodsType);
-			}
-		}
-		
-		//初始化商品集合数据
-		if(goodses == null || goodses.size() == 0){
-			Random random = new Random();
-			goodses = new ArrayList<List<Goods>>();
-			
-			for (int j = 1; j <= goodsTypes.size(); j++) {
-				List<Goods> item = new ArrayList<Goods>();
-				
-				for (int k = 1; k <= 7; k++) {
-					float currentPrice = random.nextInt(100);
-					float prePrice = random.nextInt(1000);
-					
-					Goods goods = new Goods();
-					goods.setId(Long.valueOf(j+k));
-					goods.setName("商品商品商品商品商品商品商品商品商品商品商品商品" + k);
-					goods.setSubTitle("子标题"+k);
-					goods.setCurrentPrice(currentPrice);
-					goods.setPrePrice(prePrice);
-					item.add(goods);
-				}
-				
-				goodses.add(item);
-			}
+			goodsTypes = goodsTypeBusiness.findFocusGoodsTypes();
 		}
 		
 		lvMyAttention.setAdapter(new LvMyAttentionAdapter());
-		lvMyAttention.expandGroup(0);
+		lvMyAttention.setOnGroupExpandListener(this);
+		lvMyAttention.setOnChildClickListener(this);
+		lvMyAttention.expandGroup(0);//默认展开系统一项
+	}
+	
+	/**
+	 * 切换到商品详细页面
+	 */
+	@Override
+	public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
+		Intent intent = new Intent(this,GoodsDeailActivity.class);
+		intent.putExtra("GoodsItem", goodsTypes.get(groupPosition).getGoodses().get(childPosition));
+		this.startActivity(intent);
+		return true;
+	}
+	
+	/**
+	 * 商品类型展开监听器
+	 */
+	@Override
+	public void onGroupExpand(int groupPosition) {
+		LvMyAttentionAdapter adapter = (LvMyAttentionAdapter)lvMyAttention.getExpandableListAdapter();
+		
+		if(!adapter.isExpand[groupPosition]){
+			GoodsType goodsType = goodsTypes.get(groupPosition);
+			List<Goods> goods = goodsBusiness.findFocusGoodsByGoodsType(goodsType, new Page<Goods>());
+			goodsTypes.get(groupPosition).getGoodses().addAll(goods);
+			
+			adapter.notifyDataSetChanged();
+			adapter.isExpand[groupPosition] = true;
+		}
 	}
 	
 	/**
@@ -113,6 +123,12 @@ public class MainActivity extends Activity{
 	 * @author XING
 	 */
 	private class LvMyAttentionAdapter extends BaseExpandableListAdapter{
+		private boolean[] isExpand;
+		
+		public LvMyAttentionAdapter() {
+			isExpand = new boolean[getGroupCount()];
+		}
+		
 		@Override
 		public int getGroupCount() {
 			return goodsTypes.size();
@@ -120,7 +136,7 @@ public class MainActivity extends Activity{
 
 		@Override
 		public int getChildrenCount(int groupPosition) {
-			return goodses.get(groupPosition).size();
+			return goodsTypes.get(groupPosition).getGoodses().size();
 		}
 
 		@Override
@@ -130,7 +146,7 @@ public class MainActivity extends Activity{
 
 		@Override
 		public Object getChild(int groupPosition, int childPosition) {
-			return goodses.get(groupPosition).get(childPosition);
+			return goodsTypes.get(groupPosition).getGoodses().get(childPosition);
 		}
 
 		@Override
@@ -163,19 +179,20 @@ public class MainActivity extends Activity{
 			if(convertView == null){
 				convertView = MainActivity.this.getLayoutInflater().inflate(R.layout.lv_my_attention_child, parent,false);
 			}
-			Goods goods = goodses.get(groupPosition).get(childPosition);
+			Goods goods = goodsTypes.get(groupPosition).getGoodses().get(childPosition);
 			
 			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
 			tvName.setText(goods.getName());
-			
-//			TextView tvSubTitle = (TextView) convertView.findViewById(R.id.tvSubTitle);
-//			tvSubTitle.setText(goods.getSubTitle());
 			
 			TextView tvPrePrice = (TextView) convertView.findViewById(R.id.tvPrePrice);
 			tvPrePrice.setText("上次价格：" + goods.getPrePrice());
 			
 			TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
 			tvCurrentPrice.setText("当前价格：" + goods.getCurrentPrice());
+			
+			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
+			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
+			
 			return convertView;
 		}
 

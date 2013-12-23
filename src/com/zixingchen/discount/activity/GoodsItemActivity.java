@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zixingchen.discount.R;
-import com.zixingchen.discount.business.GoodsItemBusiness;
+import com.zixingchen.discount.business.GoodsBusiness;
 import com.zixingchen.discount.common.Page;
 import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
@@ -37,7 +37,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	private ListView lvGoodsItem;//商品列表
 	private GoodsType goodsType;//所属商品类型对象
 	private GoodsItemHandler handler = new GoodsItemHandler();
-	private GoodsItemBusiness bussiness = new GoodsItemBusiness();
+	private GoodsBusiness bussiness = new GoodsBusiness();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 				} catch (Exception e) {
 					e.printStackTrace();
 					Message msg = Message.obtain();
-					msg.what = GoodsItemBusiness.FIND_GOODS_FAILURE;
+					msg.what = GoodsBusiness.FIND_GOODS_FAILURE;
 					handler.sendMessage(msg);
 				}
 			};
@@ -85,7 +85,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 	 * 关注商品
 	 */
 	public void attentionGoods(View view){
-		System.out.println("************");
+//		bussiness.addFocusGoods(goods);
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case GoodsItemBusiness.FIND_GOODS_SUCCESS:
+			case GoodsBusiness.FIND_GOODS_SUCCESS:
 				Page<Goods> page = (Page<Goods>)msg.obj;
 				List<Goods> newDatas = ((Page<Goods>)msg.obj).getDatas();
 				if(newDatas != null && newDatas.size()>0){
@@ -158,7 +158,7 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 					adapter.notifyDataSetChanged();
 				}
 				break;
-			case GoodsItemBusiness.FIND_GOODS_FAILURE:
+			case GoodsBusiness.FIND_GOODS_FAILURE:
 				Toast.makeText(GoodsItemActivity.this, "加载商品列表失败！", Toast.LENGTH_LONG).show();
 				break;
 			}
@@ -192,14 +192,14 @@ public class GoodsItemActivity extends Activity implements OnItemClickListener{
 			if(convertView == null)
 				convertView = GoodsItemActivity.this.getLayoutInflater().inflate(R.layout.lv_goods_item, parent,false);
 			
-			ImageView ivGoodsIcon = (ImageView) convertView.findViewById(R.id.ivGoodsIcon);
+			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
 			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
 			TextView tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
 			
 			Goods goods = goodses.get(position);
 			tvName.setText(goods.getName());
 			tvPrice.setText("￥" + goods.getCurrentPrice());
-			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivGoodsIcon);
+			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
 			
 			//判断当前下标是否到达倒数第三个，且判断当前页是不是最后一页，如果不是最后一页就加载下一页的数据
 			if(position == goodses.size()-3 && !page.isLastPage()){

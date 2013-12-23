@@ -10,7 +10,7 @@ public class Goods implements Serializable{
 	private static final long serialVersionUID = 1839147853139127631L;
 	
 	private Long id;
-	private GoodsType goodsType;//所属分类
+	private Long goodsTypeId;//所属分类ID
 	private float prePrice;//商品价格
 	private float currentPrice;//当前价格
 	private String name;//商品名
@@ -26,12 +26,12 @@ public class Goods implements Serializable{
 		this.setName(name);
 	}
 
-	public GoodsType getGoodsType() {
-		return goodsType;
+	public Long getGoodsTypeId() {
+		return goodsTypeId;
 	}
 
-	public void setGoodsType(GoodsType goodsType) {
-		this.goodsType = goodsType;
+	public void setGoodsTypeId(Long goodsTypeId) {
+		this.goodsTypeId = goodsTypeId;
 	}
 
 	public float getPrePrice() {
