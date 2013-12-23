@@ -1,12 +1,15 @@
 package com.zixingchen.discount.common;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 分页类
  * @author 陈梓星
  */
-public class Page<T> {
+public class Page<T> implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	private int pageSize = 10;//一页显示的行数
 	private int pageNumber = 1;//当前页码
 	private int totalPage;//一共有几多页

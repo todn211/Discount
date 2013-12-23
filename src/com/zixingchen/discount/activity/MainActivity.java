@@ -1,13 +1,14 @@
 package com.zixingchen.discount.activity;
 
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
@@ -15,7 +16,6 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsBusiness;
 import com.zixingchen.discount.business.GoodsTypeBusiness;
@@ -32,7 +32,6 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	
 	private ExpandableListView lvMyFocus;//关注的列表
 	private List<GoodsType> goodsTypes;//关注的商品类型集合
-//	private List<List<Goods>> goodses;//关注的商品集合
 	private Button btRefresh;//刷新
 	private Button btAdd;//添加关注 
 	private GoodsTypeBusiness goodsTypeBusiness;
@@ -187,8 +186,10 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			TextView tvPrePrice = (TextView) convertView.findViewById(R.id.tvPrePrice);
 			tvPrePrice.setText("上次价格：" + goods.getPrePrice());
 			
+			//加载当前价格
 			TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
-			tvCurrentPrice.setText("当前价格：" + goods.getCurrentPrice());
+			goodsBusiness.loadGoodsPrice(goods.getHref(), tvCurrentPrice);
+			
 			
 			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
 			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);

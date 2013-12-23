@@ -2,23 +2,32 @@ package com.zixingchen.discount.business;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.zixingchen.discount.activity.GoodsListActivity.LvGoodsListAdapter;
 import com.zixingchen.discount.common.Page;
 import com.zixingchen.discount.dao.GoodsDao;
 import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
+import com.zixingchen.discount.utils.ContextUtil;
 import com.zixingchen.discount.utils.TaobaoUtil;
 
 /**
@@ -37,29 +46,22 @@ public class GoodsBusiness {
 	public static final int FIND_GOODS_SUCCESS = 1;
 	
 	/**
+	 * 初始化商品价格
+	 */
+	public static final int INIT_PRICE = 2;
+	
+	/**
 	 * 是否加载了所有数据（已经没有下一页）
 	 */
 	public static final int IS_ALL_DATA = 1;
 	
 	private GoodsDao goodsDao;
+	private static GoodsHandler handler = new GoodsHandler();
+	
+	
 	
 	public GoodsBusiness() {
 		goodsDao = new GoodsDao();
-	}
-	
-	
-	/**
-	 * 创建参数对象
-	 * @return 参数对象
-	 */
-	private RequestParams createBaseParams(){
-		RequestParams params = new RequestParams();
-		params.put("_input_charset", "UTF-8");
-		params.put("style", "list");
-		params.put("json", "on");
-		params.put("module", "page");
-		params.put("data-key", "s");
-		return params;
 	}
 	
 	/**
@@ -88,63 +90,112 @@ public class GoodsBusiness {
 	 * @param handler 消息分配器，负责把查询出来的结果返回给调用者
 	 * @throws Exception
 	 */
-	public void findGoodsByGoodsType(final GoodsType goodsType,final Page<Goods> page,final Handler handler){
-		final List<Goods> goodses = new ArrayList<Goods>();
-		
-		try {
-			RequestParams params = createBaseParams();
-			params.put("data-value", String.valueOf(page.getStartRecord()));//从哪行开始获取数据
-			params.put("pSize", String.valueOf(page.getPageSize()));//每页显示行数
-			params.put("cat", goodsType.getTypeCode());
-			if(!TextUtils.isEmpty(goodsType.getKeyWord()))
-				params.put("q", URLEncoder.encode(goodsType.getKeyWord(), "UTF-8"));
-			
-			String url = TaobaoUtil.GOODS_ITEM_LIST_URL + "?" + params.toString();
-			
-			AsyncHttpClient ahc = new AsyncHttpClient();
-			ahc.get(url, new JsonHttpResponseHandler(){
-				@Override
-				public void onSuccess(JSONObject response) {
-					try {
-						if(!response.isNull("itemList")){
-							JSONArray goodsItems = response.getJSONArray("itemList");
-							addGoodsToList(goodses, goodsType.getId(), goodsItems);
+	public void loadGoodsByGoodsType(final GoodsType goodsType,final Page<Goods> page,final LvGoodsListAdapter adapter){
+		new Thread(){
+			public void run() {
+				final List<Goods> goodses = new ArrayList<Goods>();
+				
+				try {
+					RequestParams params = createBaseParams();
+					params.put("data-value", String.valueOf(page.getStartRecord()));//从哪行开始获取数据
+					params.put("pSize", String.valueOf(page.getPageSize()));//每页显示行数
+					params.put("cat", goodsType.getTypeCode());
+					if(!TextUtils.isEmpty(goodsType.getKeyWord()))
+						params.put("q", URLEncoder.encode(goodsType.getKeyWord(), "UTF-8"));
+					
+					String url = TaobaoUtil.GOODS_ITEM_LIST_URL + "?" + params.toString();
+					
+					AsyncHttpClient httpClient = new AsyncHttpClient();
+					httpClient.get(url, new JsonHttpResponseHandler(){
+						@Override
+						public void onSuccess(JSONObject response) {
+							try {
+								if(!response.isNull("itemList")){
+									JSONArray goodsItems = response.getJSONArray("itemList");
+									addGoodsToList(goodses, goodsType.getId(), goodsItems);
+								}
+								
+								if(!response.isNull("mallItemList")){
+									JSONArray goodsItems = response.getJSONArray("mallItemList");
+									addGoodsToList(goodses, goodsType.getId(), goodsItems);
+								}
+								
+								if(!response.isNull("page")){
+									JSONObject pageJSON = response.getJSONObject("page");
+									if(!pageJSON.isNull("currentPage"))
+										page.setPageNumber(pageJSON.getInt("currentPage"));
+									
+									if(!pageJSON.isNull("totalPage"))
+										page.setTotalPage(pageJSON.getInt("totalPage"));
+								}
+								
+								page.setDatas(goodses);
+								
+								//初始化要传递的参数
+								Map<String,Object> params = new HashMap<String,Object>();
+								params.put("page", page);
+								params.put("adapter", adapter);
+								
+								Message msg = Message.obtain();
+								msg.what = FIND_GOODS_SUCCESS;
+								msg.obj = params;
+								handler.sendMessage(msg);
+							} catch (Exception e) {
+								e.printStackTrace();
+								Message msg = Message.obtain();
+								msg.what = FIND_GOODS_FAILURE;
+								handler.sendMessage(msg);
+							}
 						}
-						
-						if(!response.isNull("mallItemList")){
-							JSONArray goodsItems = response.getJSONArray("mallItemList");
-							addGoodsToList(goodses, goodsType.getId(), goodsItems);
-						}
-						
-						if(!response.isNull("page")){
-							JSONObject pageJSON = response.getJSONObject("page");
-							if(!pageJSON.isNull("currentPage"))
-								page.setPageNumber(pageJSON.getInt("currentPage"));
-							
-							if(!pageJSON.isNull("totalPage"))
-								page.setTotalPage(pageJSON.getInt("totalPage"));
-						}
-						
-						page.setDatas(goodses);
-						
-						Message msg = Message.obtain();
-						msg.what = FIND_GOODS_SUCCESS;
-						msg.obj = page;
-						handler.sendMessage(msg);
-					} catch (Exception e) {
-						e.printStackTrace();
-						Message msg = Message.obtain();
-						msg.what = FIND_GOODS_FAILURE;
-						handler.sendMessage(msg);
-					}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+					Message msg = Message.obtain();
+					msg.what = FIND_GOODS_FAILURE;
+					handler.sendMessage(msg);
 				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-			Message msg = Message.obtain();
-			msg.what = FIND_GOODS_FAILURE;
-			handler.sendMessage(msg);
-		}
+			}
+		}.start();
+	}
+	
+	/**
+	 * 根据商品链接获取商品价格
+	 * @param href 商品链接
+	 * @return 商品价格
+	 */
+	public void loadGoodsPrice(final String href,final TextView textView){
+		new Thread(){
+			public void run() {
+				try {
+					AsyncHttpClient httpClient = new AsyncHttpClient();
+					httpClient.get(href, new AsyncHttpResponseHandler(){
+						@Override
+						public void onSuccess(String response) {
+							Message msg = Message.obtain();
+							msg.obj = textView;
+							msg.what = INIT_PRICE;
+							handler.sendMessage(msg);
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			};
+		}.start();
+	}
+	
+	/**
+	 * 创建参数对象
+	 * @return 参数对象
+	 */
+	private RequestParams createBaseParams(){
+		RequestParams params = new RequestParams();
+		params.put("_input_charset", "UTF-8");
+		params.put("style", "list");
+		params.put("json", "on");
+		params.put("module", "page");
+		params.put("data-key", "s");
+		return params;
 	}
 	
 	/**
@@ -164,6 +215,42 @@ public class GoodsBusiness {
 			goods.setIcon(goodsItem.getString("image") + "_sum.jpg");
 			goods.setHref(goodsItem.getString("href"));
 			goodses.add(goods);
+		}
+	}
+	
+	/**
+	 * 消息处理器
+	 * @author 陈梓星
+	 */
+	@SuppressLint("HandlerLeak")
+	private static class GoodsHandler extends Handler{
+		@SuppressWarnings("unchecked")
+		@Override
+		public void handleMessage(Message msg) {
+			switch(msg.what){
+				//初始化商品当前价格
+				case GoodsBusiness.INIT_PRICE :
+					TextView textView = (TextView) msg.obj;
+					textView.setText("当前价格：" + 100.55);
+					break;
+					
+				case GoodsBusiness.FIND_GOODS_SUCCESS:
+					Map<String,Object> params = (Map<String, Object>) msg.obj;
+					Page<Goods> page = (Page<Goods>)params.get("page");
+					LvGoodsListAdapter adapter = (LvGoodsListAdapter) params.get("adapter");
+					List<Goods> newDatas = page.getDatas();
+					if(newDatas != null && newDatas.size()>0){
+						adapter.getDatas().addAll(newDatas);
+						adapter.setPage(page.clonePageNotDatas());
+						adapter.notifyDataSetChanged();
+					}
+					break;
+					
+				case GoodsBusiness.FIND_GOODS_FAILURE:
+					Toast.makeText(ContextUtil.getInstance(), "加载商品列表失败！", Toast.LENGTH_LONG).show();
+					break;
+			}
+			
 		}
 	}
 }

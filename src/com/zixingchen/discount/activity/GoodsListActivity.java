@@ -1,5 +1,6 @@
 package com.zixingchen.discount.activity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +28,15 @@ import com.zixingchen.discount.model.GoodsType;
 import com.zixingchen.discount.utils.ImageLoaderUtils;
 
 /**
- * 商品项页面
+ * 商品列表页面
  * @author 陈梓星
  */
 @SuppressLint("HandlerLeak")
 public class GoodsListActivity extends Activity implements OnItemClickListener{
-
-	private List<Goods> goodses;//商品集合 
-	private ListView lvGoodsItem;//商品列表
+	
 	private GoodsType goodsType;//所属商品类型对象
-	private GoodsItemHandler handler = new GoodsItemHandler();
+	private ListView lvGoodsList;//商品列表
+	private LvGoodsListAdapter adapter;//商品列表数据适配器
 	private GoodsBusiness bussiness = new GoodsBusiness();
 	
 	@Override
@@ -61,24 +61,13 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 	 * 初始化商品列表
 	 */
 	private void initLvGoodsItem(){
-		lvGoodsItem = (ListView) this.findViewById(R.id.lvGoodsList);
-		lvGoodsItem.setOnItemClickListener(this);
-		goodses = new ArrayList<Goods>();
-		lvGoodsItem.setAdapter(new LvGoodsItemAdapter());
+		lvGoodsList = (ListView) this.findViewById(R.id.lvGoodsList);
+		lvGoodsList.setOnItemClickListener(this);
+		adapter = new LvGoodsListAdapter();
+		lvGoodsList.setAdapter(adapter);
 		
 		//远程加载商品列表
-		new Thread(){
-			public void run() {
-				try {
-					bussiness.findGoodsByGoodsType(goodsType, new Page<Goods>(),handler);
-				} catch (Exception e) {
-					e.printStackTrace();
-					Message msg = Message.obtain();
-					msg.what = GoodsBusiness.FIND_GOODS_FAILURE;
-					handler.sendMessage(msg);
-				}
-			};
-		}.start();
+		bussiness.loadGoodsByGoodsType(goodsType, new Page<Goods>(),adapter);
 	}
 	
 	/**
@@ -94,7 +83,7 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Intent intent = new Intent(this,GoodsDeailActivity.class);
-		intent.putExtra("GoodsItem", goodses.get(position));
+		intent.putExtra("GoodsItem", adapter.getDatas().get(position));
 		this.startActivity(intent);
 	}
 	
@@ -140,46 +129,25 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 	}
 	
 	/**
-	 * 商品项列表消息分配器、处理器
-	 * @author 陈梓星
-	 */
-	@SuppressWarnings("unchecked")
-	private class GoodsItemHandler extends Handler{
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case GoodsBusiness.FIND_GOODS_SUCCESS:
-				Page<Goods> page = (Page<Goods>)msg.obj;
-				List<Goods> newDatas = ((Page<Goods>)msg.obj).getDatas();
-				if(newDatas != null && newDatas.size()>0){
-					goodses.addAll(newDatas);
-					LvGoodsItemAdapter adapter = ((LvGoodsItemAdapter)lvGoodsItem.getAdapter());
-					adapter.setPage(page.clonePageNotDatas());
-					adapter.notifyDataSetChanged();
-				}
-				break;
-			case GoodsBusiness.FIND_GOODS_FAILURE:
-				Toast.makeText(GoodsListActivity.this, "加载商品列表失败！", Toast.LENGTH_LONG).show();
-				break;
-			}
-		}
-	}
-	
-	/**
 	 * 商品项列表适配器
 	 * @author 陈梓星
 	 */
-	private class LvGoodsItemAdapter extends BaseAdapter{
+	public class LvGoodsListAdapter extends BaseAdapter{
 		private Page<Goods> page;
+		private List<Goods> datas;//商品集合
+		
+		public LvGoodsListAdapter() {
+			this.datas = new ArrayList<Goods>();
+		}
 
 		@Override
 		public int getCount() {
-			return goodses.size();
+			return datas.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return goodses.get(position);
+			return datas.get(position);
 		}
 
 		@Override
@@ -196,21 +164,29 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
 			TextView tvPrice = (TextView) convertView.findViewById(R.id.tvPrice);
 			
-			Goods goods = goodses.get(position);
+			Goods goods = datas.get(position);
 			tvName.setText(goods.getName());
 			tvPrice.setText("￥" + goods.getCurrentPrice());
 			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
 			
 			//判断当前下标是否到达倒数第三个，且判断当前页是不是最后一页，如果不是最后一页就加载下一页的数据
-			if(position == goodses.size()-3 && !page.isLastPage()){
+			if(position == datas.size()-3 && !page.isLastPage()){
 				page.setPageNumber(page.getPageNumber() + 1);
-				bussiness.findGoodsByGoodsType(goodsType, page,handler);
+				bussiness.loadGoodsByGoodsType(goodsType, page,adapter);
 			}
 			return convertView;
 		}
 		
 		public void setPage(Page<Goods> page){
 			this.page = page;
+		}
+
+		public List<Goods> getDatas() {
+			return datas;
+		}
+
+		public void setDatas(List<Goods> datas) {
+			this.datas = datas;
 		}
 	}
 }
