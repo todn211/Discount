@@ -102,7 +102,7 @@ public class GoodsBusiness {
 					if(!TextUtils.isEmpty(goodsType.getKeyWord()))
 						params.put("q", URLEncoder.encode(goodsType.getKeyWord(), "UTF-8"));
 					
-					String url = TaobaoUtil.GOODS_ITEM_LIST_URL + "?" + params.toString();
+					String url = TaobaoUtil.TAOBAO_GOODS_ITEM_LIST_URL + "?" + params.toString();
 					
 					AsyncHttpClient httpClient = new AsyncHttpClient();
 					httpClient.get(url, new JsonHttpResponseHandler(){
@@ -158,22 +158,37 @@ public class GoodsBusiness {
 	}
 	
 	/**
-	 * 根据商品链接获取商品价格
-	 * @param href 商品链接
+	 * 根据商品ID获取商品价格
+	 * @param id 商品ID
 	 * @return 商品价格
 	 */
-	public void loadGoodsPrice(final String href,final TextView textView){
+	public void loadGoodsPrice(final Long id,final TextView textView){
 		new Thread(){
 			public void run() {
 				try {
+					//http://a.m.taobao.com/i36394002309.htm
+					
+					
 					AsyncHttpClient httpClient = new AsyncHttpClient();
-					httpClient.get(href, new AsyncHttpResponseHandler(){
+					httpClient.get("http://a.m.taobao.com/i" + id.toString() + ".htm", new AsyncHttpResponseHandler(){
 						@Override
 						public void onSuccess(String response) {
+							String price = response.substring(response.indexOf("<strong class=\"oran\">")+21, response.indexOf("</strong>"));
+							Map<String,Object> params = new HashMap<String, Object>();
+							params.put("price", price);
+							params.put("textView", textView);
+							
 							Message msg = Message.obtain();
-							msg.obj = textView;
+							msg.obj = params;
 							msg.what = INIT_PRICE;
 							handler.sendMessage(msg);
+							
+//							System.out.println(response.toString());
+						}
+						
+						@Override
+						public void onFailure(Throwable arg0, String arg1) {
+							System.out.println(arg0.getMessage());
 						}
 					});
 				} catch (Exception e) {
@@ -229,8 +244,10 @@ public class GoodsBusiness {
 			switch(msg.what){
 				//初始化商品当前价格
 				case GoodsBusiness.INIT_PRICE :
-					TextView textView = (TextView) msg.obj;
-					textView.setText("当前价格：" + 100.55);
+					Map<String,Object> priceParams = (Map<String, Object>) msg.obj;
+					TextView textView = (TextView) priceParams.get("textView");
+					String price = (String) priceParams.get("price");
+					textView.setText("当前价格：" + price);
 					break;
 				
 				//添加商品列表到前台展示

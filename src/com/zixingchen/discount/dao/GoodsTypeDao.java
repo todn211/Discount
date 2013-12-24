@@ -29,10 +29,10 @@ public class GoodsTypeDao {
 	public List<GoodsType> findFocusGoodsTypes(){
 		List<GoodsType> goodsTypes = new ArrayList<GoodsType>();
 		String sql = "select * from goods_type where ID in ("
-				+ "select max(goodsType.ID) as goods_type_id from goods_type goodsType join "
-				+ "focus_goods focusGoods on goodsType.id = focusGoods.goods_type_id "
-				+ "group by focusGoods.id"
-				+ ")";
+						+ "select max(goodsType.ID) as goods_type_id from goods_type goodsType join "
+						+ "focus_goods focusGoods on goodsType.id = focusGoods.goods_type_id "
+						+ "group by focusGoods.id"
+						+ ")";
 		
 		SQLiteDatabase db = dbHelp.getReadableDatabase();
 		Cursor cursor = null;
@@ -51,9 +51,6 @@ public class GoodsTypeDao {
 					GoodsType goodsType = new GoodsType(id,parentId,name,typeCode,keyWord,isLeaf);
 					goodsType.setGoodses(new ArrayList<Goods>());
 					goodsTypes.add(goodsType);
-					
-					
-					System.out.println(name);
 				}
 			}
 		} catch (Exception e) {

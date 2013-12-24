@@ -84,7 +84,10 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		lvMyFocus.setAdapter(new lvMyFocusAdapter());
 		lvMyFocus.setOnGroupExpandListener(this);
 		lvMyFocus.setOnChildClickListener(this);
-		lvMyFocus.expandGroup(0);//默认展开系统一项
+		
+		//默认展开系统一项
+		if(goodsTypes != null && goodsTypes.size() > 0)
+			lvMyFocus.expandGroup(0);
 	}
 	
 	/**
@@ -176,21 +179,25 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			if(convertView == null){
 				convertView = MainActivity.this.getLayoutInflater().inflate(R.layout.lv_my_focus_child, parent,false);
 			}
-			Goods goods = goodsTypes.get(groupPosition).getGoodses().get(childPosition);
 			
-			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
-			tvName.setText(goods.getName());
-			
-			TextView tvPrePrice = (TextView) convertView.findViewById(R.id.tvPrePrice);
-			tvPrePrice.setText("上次价格：" + goods.getPrePrice());
-			
-			//加载当前价格
-			TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
-			goodsBusiness.loadGoodsPrice(goods.getHref(), tvCurrentPrice);
-			
-			
-			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
-			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
+				Goods goods = goodsTypes.get(groupPosition).getGoodses().get(childPosition);
+				
+				TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
+				tvName.setText(goods.getName());
+				
+				TextView tvPrePrice = (TextView) convertView.findViewById(R.id.tvPrePrice);
+				tvPrePrice.setText("上次价格：" + goods.getPrePrice());
+				
+				//加载当前价格
+				TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
+				goodsBusiness.loadGoodsPrice(goods.getId(), tvCurrentPrice);
+				
+				//加载当前图标
+				ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
+				ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
+				
+				if(isLastChild)
+					isExpand[groupPosition] = true;
 			
 			return convertView;
 		}

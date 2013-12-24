@@ -14,15 +14,27 @@ import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.loopj.android.http.RequestParams;
+
 import android.text.TextUtils;
 
 public abstract class TaobaoUtil {
-//	public static final String URL = "http://gw.api.taobao.com/router/rest";
+	/**
+	 * 用淘宝API访问地址
+	 */
+	public static final String TAOBAO_API_URL = "http://gw.api.taobao.com/router/rest";
 	
 	/**
-	 * 商品列表URL
+	 * 淘宝商品列表URL
 	 */
-	public static final String GOODS_ITEM_LIST_URL = "http://list.taobao.com/itemlist/default.htm";
+	public static final String TAOBAO_GOODS_ITEM_LIST_URL = "http://list.taobao.com/itemlist/default.htm";
+	
+	/**
+	 * 淘宝单个商品URL
+	 */
+	public static final String TAOBAO_GOODS_ITEM_URL = "http://h5.m.taobao.com/awp/core/detail.htm";
+	
+	
 	
 	private TaobaoUtil() {
 	}
@@ -157,10 +169,10 @@ public abstract class TaobaoUtil {
 	 * 把要发送到淘宝的参数按淘宝指定格式进行排序和加密
 	 * @param parameters 要发送到淘宝的参数
 	 * @param session 用户登录的session
-	 * @return 按淘宝指定格式进行排序和加密的参数Map集合
+	 * @return 按淘宝指定格式进行排序和加密的参数对象
 	 * @throws IOException
 	 */
-   public static Map<String, String> generateApiParams(Map<String,String> parameters, String session) throws IOException {
+   public static RequestParams generateApiParams(Map<String,String> parameters, String session) throws IOException {
 		TreeMap<String, String> params = new TreeMap<String, String>();
 		params.put("timestamp", String.valueOf(System.currentTimeMillis()));
 		params.put("v", "2.0");
@@ -171,12 +183,44 @@ public abstract class TaobaoUtil {
 			params.put("session", session);
 		}
 		params.put("sign_method", "hmac");
-//		params.put("method", "post");
+		params.put("method", "post");
 		
 		params.putAll(parameters);
 		
 		String sign = signTopRequestNew(params, "1d26655c651df01535676b0aaa120a8c");
 		params.put("sign", sign);
-		return params;
+		
+		RequestParams requestParams = new RequestParams(params);
+		return requestParams;
+	}
+   
+   /**
+	 * 把要发送到淘宝的参数按淘宝指定格式进行排序和加密
+	 * @param parameters 要发送到淘宝的参数
+	 * @param session 用户登录的session
+	 * @return 按淘宝指定格式进行排序和加密的参数对象
+	 * @throws IOException
+	 */
+  public static RequestParams generateApiParams2(Map<String,String> parameters, String session) throws IOException {
+		TreeMap<String, String> params = new TreeMap<String, String>();
+		params.put("timestamp", String.valueOf(System.currentTimeMillis()));
+		params.put("v", "4.0");
+		params.put("app_key", "21696545");
+		params.put("partner_id", "top-android-sdk");
+		params.put("type", "jsonp");
+		params.put("callback", "jsonp");
+		if (!TextUtils.isEmpty(session)) {
+			params.put("session", session);
+		}
+		params.put("sign_method", "hmac");
+		params.put("method", "post");
+		
+		params.putAll(parameters);
+		
+		String sign = signTopRequestNew(params, "1d26655c651df01535676b0aaa120a8c");
+		params.put("sign", sign);
+		
+		RequestParams requestParams = new RequestParams(params);
+		return requestParams;
 	}
 }

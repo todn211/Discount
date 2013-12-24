@@ -34,6 +34,7 @@ private DBHelp dbHelp;
 		try {
 			db.beginTransaction();
 			ContentValues values = new ContentValues();
+			values.put("ID", goods.getId());
 			values.put("GOODS_TYPE_ID", goods.getGoodsTypeId());
 			values.put("NAME", goods.getName());
 			values.put("SUB_TITLE", goods.getSubTitle());
