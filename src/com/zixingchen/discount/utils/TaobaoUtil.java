@@ -37,6 +37,15 @@ public abstract class TaobaoUtil {
 	
 	
 	private TaobaoUtil() {
+		
+	}
+	
+	/**
+	 * 构造获取单个商品信息的URL
+	 * @return 单个商品信息的URL
+	 */
+	public static String createGoodsItemUrl(Long goodsId){
+		return "http://a.m.taobao.com/i" + goodsId.toString() + ".htm";
 	}
 
 	/**
@@ -172,43 +181,13 @@ public abstract class TaobaoUtil {
 	 * @return 按淘宝指定格式进行排序和加密的参数对象
 	 * @throws IOException
 	 */
-   public static RequestParams generateApiParams(Map<String,String> parameters, String session) throws IOException {
+   public static RequestParams createApiParams(Map<String,String> parameters, String session) throws IOException {
 		TreeMap<String, String> params = new TreeMap<String, String>();
 		params.put("timestamp", String.valueOf(System.currentTimeMillis()));
 		params.put("v", "2.0");
 		params.put("app_key", "21696545");
 		params.put("partner_id", "top-android-sdk");
 		params.put("format", "json");
-		if (!TextUtils.isEmpty(session)) {
-			params.put("session", session);
-		}
-		params.put("sign_method", "hmac");
-		params.put("method", "post");
-		
-		params.putAll(parameters);
-		
-		String sign = signTopRequestNew(params, "1d26655c651df01535676b0aaa120a8c");
-		params.put("sign", sign);
-		
-		RequestParams requestParams = new RequestParams(params);
-		return requestParams;
-	}
-   
-   /**
-	 * 把要发送到淘宝的参数按淘宝指定格式进行排序和加密
-	 * @param parameters 要发送到淘宝的参数
-	 * @param session 用户登录的session
-	 * @return 按淘宝指定格式进行排序和加密的参数对象
-	 * @throws IOException
-	 */
-  public static RequestParams generateApiParams2(Map<String,String> parameters, String session) throws IOException {
-		TreeMap<String, String> params = new TreeMap<String, String>();
-		params.put("timestamp", String.valueOf(System.currentTimeMillis()));
-		params.put("v", "4.0");
-		params.put("app_key", "21696545");
-		params.put("partner_id", "top-android-sdk");
-		params.put("type", "jsonp");
-		params.put("callback", "jsonp");
 		if (!TextUtils.isEmpty(session)) {
 			params.put("session", session);
 		}

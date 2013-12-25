@@ -19,22 +19,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginLeft="3dp">
+        android:layout_marginLeft="5dp">
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:text="XX商品XX商品XX商品XX商品XX商品XX商品" />
+            android:ellipsize="end"
+        	android:maxLines="2"/>
 
         <TextView
             android:id="@+id/tvPrice"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="￥100.5" />
+            android:layout_height="wrap_content"/>
 
         <Button
+            android:id="@+id/btFocusGoods"
             style="@style/cornersButtonOrange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

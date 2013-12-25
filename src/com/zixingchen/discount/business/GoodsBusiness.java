@@ -69,6 +69,9 @@ public class GoodsBusiness {
 	 * @return 添加成功返回true，否则返回false
 	 */
 	public boolean addFocusGoods(Goods goods){
+		List<Goods> goodses = goodsDao.findFocusGoods(new Goods(goods.getId()));
+		if(goodses != null && goodses.size() > 0)
+			return true;
 		return goodsDao.addFocusGoods(goods);
 	}
 	
@@ -159,31 +162,26 @@ public class GoodsBusiness {
 	
 	/**
 	 * 根据商品ID获取商品价格
-	 * @param id 商品ID
+	 * @param goods 商品对象
 	 * @return 商品价格
 	 */
-	public void loadGoodsPrice(final Long id,final TextView textView){
+	public void loadGoodsPrice(final Goods goods,final TextView textView){
 		new Thread(){
 			public void run() {
 				try {
-					//http://a.m.taobao.com/i36394002309.htm
-					
-					
 					AsyncHttpClient httpClient = new AsyncHttpClient();
-					httpClient.get("http://a.m.taobao.com/i" + id.toString() + ".htm", new AsyncHttpResponseHandler(){
+					httpClient.get(TaobaoUtil.createGoodsItemUrl(goods.getId()), new AsyncHttpResponseHandler(){
 						@Override
 						public void onSuccess(String response) {
 							String price = response.substring(response.indexOf("<strong class=\"oran\">")+21, response.indexOf("</strong>"));
 							Map<String,Object> params = new HashMap<String, Object>();
 							params.put("price", price);
 							params.put("textView", textView);
-							
+							params.put("goods", goods);
 							Message msg = Message.obtain();
 							msg.obj = params;
 							msg.what = INIT_PRICE;
 							handler.sendMessage(msg);
-							
-//							System.out.println(response.toString());
 						}
 						
 						@Override
@@ -245,9 +243,11 @@ public class GoodsBusiness {
 				//初始化商品当前价格
 				case GoodsBusiness.INIT_PRICE :
 					Map<String,Object> priceParams = (Map<String, Object>) msg.obj;
+					Goods goods = (Goods) priceParams.get("goods");
 					TextView textView = (TextView) priceParams.get("textView");
-					String price = (String) priceParams.get("price");
-					textView.setText("当前价格：" + price);
+					String price = "当前价格：" + priceParams.get("price");
+					textView.setText(price);
+					goods.setPriceCache(price);
 					break;
 				
 				//添加商品列表到前台展示

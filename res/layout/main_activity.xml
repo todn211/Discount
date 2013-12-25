@@ -50,12 +50,6 @@
     </LinearLayout>
 
     <!-- 主内容区域 -->
-   <!--  <ListView
-        android:id="@+id/lvMyAttention"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null" /> -->
-    
     <ExpandableListView 
         android:id="@+id/lvMyFocus"
         android:divider="#CBCBCB"

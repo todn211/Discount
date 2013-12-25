@@ -6,7 +6,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.webkit.WebChromeClient.CustomViewCallback;
+import android.text.TextUtils;
 
 import com.zixingchen.discount.common.Page;
 import com.zixingchen.discount.model.Goods;
@@ -56,13 +56,65 @@ private DBHelp dbHelp;
 	}
 	
 	/**
+	 * 搜索关注的商品对象
+	 * @param filter 过滤条件(可过滤的属性：name、id、goodsTypeId)
+	 * @return 商品对象集合
+	 */
+	public List<Goods> findFocusGoods(Goods filter){
+		List<Goods> goodses = new ArrayList<Goods>();
+		
+		SQLiteDatabase db = dbHelp.getReadableDatabase();
+		Cursor cursor = null;
+		try {
+			StringBuilder sql = new StringBuilder("select * from focus_goods where 1=1 ");
+			
+			List<String> params = new ArrayList<String>();
+			if(filter.getId() != null){
+				sql.append("and ID=? ");
+				params.add(filter.getId().toString());
+			}
+			
+			if(filter.getGoodsTypeId() != null){
+				sql.append("and GOODS_TYPE_ID=? ");
+				params.add(filter.getGoodsTypeId().toString());
+			}
+			
+			if(!TextUtils.isEmpty(filter.getName())){
+				sql.append("and NAME=? ");
+				params.add(filter.getName());
+			}
+			
+			cursor = db.rawQuery(sql.toString(), params.toArray(new String[params.size()]));
+			while(cursor.moveToNext()){
+				Goods goods = new Goods();
+				goods.setGoodsTypeId(cursor.getLong(cursor.getColumnIndex("GOODS_TYPE_ID")));
+				goods.setHref(cursor.getString(cursor.getColumnIndex("HREF")));
+				goods.setIcon(cursor.getString(cursor.getColumnIndex("ICON")));
+				goods.setId(cursor.getLong(cursor.getColumnIndex("ID")));
+				goods.setName(cursor.getString(cursor.getColumnIndex("NAME")));
+				goods.setPrePrice(cursor.getFloat(cursor.getColumnIndex("PRICE")));
+				
+				goodses.add(goods);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			if(cursor != null)
+				cursor.close();
+			db.close();
+		}
+		
+		return goodses;
+	}
+	
+	/**
 	 * 根据商品类型获取相应关注的商品列表
 	 * @param goodsType 商品类型
 	 * @param page 分页对象
 	 * @return 关注的商品列表
 	 */
 	public List<Goods> findFocusGoodsByGoodsType(GoodsType goodsType,Page<Goods> page){
-		final List<Goods> goodses = new ArrayList<Goods>();
+		List<Goods> goodses = new ArrayList<Goods>();
 		
 		SQLiteDatabase db = dbHelp.getReadableDatabase();
 		Cursor cursor = null;

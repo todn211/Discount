@@ -18,8 +18,13 @@ public class Goods implements Serializable{
 	private String descript;//商品说明
 	private String icon;//图标
 	private String href;//商品的URL
+	private String priceCache;//价格缓存，为节省关注列表的网络请求
 
 	public Goods() {
+	}
+	
+	public Goods(Long id) {
+		this.id = id;
 	}
 	
 	public Goods(String name) {
@@ -96,5 +101,13 @@ public class Goods implements Serializable{
 
 	public void setHref(String href) {
 		this.href = href;
+	}
+
+	public String getPriceCache() {
+		return priceCache;
+	}
+
+	public void setPriceCache(String priceCache) {
+		this.priceCache = priceCache;
 	}
 }

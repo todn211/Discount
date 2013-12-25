@@ -2,10 +2,13 @@ package com.zixingchen.discount.activity;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
@@ -27,7 +30,7 @@ import com.zixingchen.discount.utils.ImageLoaderUtils;
  * 主页
  * @author 陈梓星
  */
-public class MainActivity extends Activity implements OnGroupExpandListener,OnChildClickListener{
+public class MainActivity extends Activity implements OnGroupExpandListener,OnChildClickListener,OnLongClickListener{
 	
 	private ExpandableListView lvMyFocus;//关注的列表
 	private List<GoodsType> goodsTypes;//关注的商品类型集合
@@ -35,6 +38,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	private Button btAdd;//添加关注 
 	private GoodsTypeBusiness goodsTypeBusiness;
 	private GoodsBusiness goodsBusiness;
+	private View testView;
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +59,11 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * 刷新关注的列表
 	 * @param view
 	 */
+	@SuppressLint("NewApi")
 	public void onBtRefreshClick(View view){
 //		new DBHelp(this, 1).insertGoodsType();
+		
+		testView.setX(100f);
 	}
 	
 	/**
@@ -68,6 +75,16 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		intent.putExtra("prevActivityIsMain", true);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_bottom,R.anim.no_anim);
+	}
+	
+
+	/**
+	 * 商品项长按事件
+	 */
+	@Override
+	public boolean onLongClick(View v) {
+		System.out.println("*******************"+v);
+		return false;
 	}
 	
 	/**
@@ -84,6 +101,10 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		lvMyFocus.setAdapter(new lvMyFocusAdapter());
 		lvMyFocus.setOnGroupExpandListener(this);
 		lvMyFocus.setOnChildClickListener(this);
+		
+//		lvMyFocus.setLongClickable(true);
+//		lvMyFocus.setOnLongClickListener(this);
+		
 		
 		//默认展开系统一项
 		if(goodsTypes != null && goodsTypes.size() > 0)
@@ -178,26 +199,32 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 			if(convertView == null){
 				convertView = MainActivity.this.getLayoutInflater().inflate(R.layout.lv_my_focus_child, parent,false);
+				convertView.setOnLongClickListener(MainActivity.this);
 			}
 			
-				Goods goods = goodsTypes.get(groupPosition).getGoodses().get(childPosition);
-				
-				TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
-				tvName.setText(goods.getName());
-				
-				TextView tvPrePrice = (TextView) convertView.findViewById(R.id.tvPrePrice);
-				tvPrePrice.setText("上次价格：" + goods.getPrePrice());
-				
-				//加载当前价格
-				TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
-				goodsBusiness.loadGoodsPrice(goods.getId(), tvCurrentPrice);
-				
-				//加载当前图标
-				ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
-				ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
-				
-				if(isLastChild)
-					isExpand[groupPosition] = true;
+			Goods goods = goodsTypes.get(groupPosition).getGoodses().get(childPosition);
+			
+			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
+			tvName.setText(goods.getName());
+			
+			TextView tvPrePrice = (TextView) convertView.findViewById(R.id.tvPrePrice);
+			tvPrePrice.setText("上次价格：" + goods.getPrePrice());
+			
+			//加载当前价格
+			TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
+			if(TextUtils.isEmpty(goods.getPriceCache())){
+				goodsBusiness.loadGoodsPrice(goods, tvCurrentPrice);
+//				System.out.println("网络加载价格数据");
+			}else{
+				tvCurrentPrice.setText(goods.getPriceCache());
+//				System.out.println("缓存加载价格数据");
+			}
+			
+			//加载当前图标
+			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
+			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
+			
+			testView = convertView;
 			
 			return convertView;
 		}

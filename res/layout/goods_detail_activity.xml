@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             style="@style/cornersButton"
             android:text="@string/back"
-            android:drawableLeft="@drawable/refresh_icon"
+            android:drawableLeft="@drawable/back_icon"
             android:drawablePadding="5dp"
             android:onClick="onBtBackClick"/>
             
@@ -50,70 +50,29 @@
             android:onClick="onBtFocusGoodsClick"/>
     </LinearLayout>
     
-    <WebView 
-        android:id="@+id/wvGoodsDetail"
+    <FrameLayout 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
-    
-    <!-- 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:contentDescription="@string/imgContentDescript"
-            android:src="@drawable/ic_launcher" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="XX商品XX商品XX商品XX商品XX商品XX商品" />
-
-            <TextView
-                android:id="@+id/tvPrice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="￥100.5" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical">
-
-                <Button
-                    style="@style/cornersButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/addAttention" />
-
-                <Button
-                    style="@style/cornersButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/addAttention" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View 
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#EEEEEE"/>
-    
-    <TextView
-        android:id="@+id/tvGoodsDetail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-	 -->
+        android:id="@+id/goodsDeailLayout">
+        
+       <WebView 
+			android:id="@+id/wvGoodsDetail"
+			android:layout_width="match_parent"
+        	android:layout_height="match_parent"/>
+       
+       <RelativeLayout
+			android:id="@+id/llShade"
+			android:layout_width="match_parent"
+        	android:layout_height="match_parent"
+        	android:background="#99222222"
+        	android:gravity="center"
+        	>
+        	<ProgressBar
+        	    android:id="@+id/pbWebload" 
+        	    style="android:attr/progressBarStyleLarge"
+        	    android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    />
+       </RelativeLayout>
+    </FrameLayout>
 </LinearLayout>

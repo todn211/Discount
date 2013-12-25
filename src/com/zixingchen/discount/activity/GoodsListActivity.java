@@ -12,9 +12,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsBusiness;
@@ -70,7 +72,14 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 	 * 关注商品
 	 */
 	public void attentionGoods(View view){
-//		bussiness.addFocusGoods(goods);
+		int location = ((Integer) view.getTag()).intValue();
+		Goods goods = adapter.getDatas().get(location);
+		boolean addResult = bussiness.addFocusGoods(goods);
+		if(addResult){
+			Toast.makeText(this, "关注商品成功！", Toast.LENGTH_SHORT).show();
+		}else{
+			Toast.makeText(this, "关注商品失败！", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/**
@@ -167,6 +176,10 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 			tvName.setText(goods.getName());
 			tvPrice.setText("￥" + goods.getCurrentPrice());
 			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
+			
+			//把当前商品集合元素的下标增值给按钮tag，以便点击的时候获取
+			Button btFocusGoods = (Button) convertView.findViewById(R.id.btFocusGoods);
+			btFocusGoods.setTag(Integer.valueOf(position));
 			
 			//判断当前下标是否到达倒数第三个，且判断当前页是不是最后一页，如果不是最后一页就加载下一页的数据
 			if(position == datas.size()-3 && !page.isLastPage()){
