@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--  商品关注列表（主页）子项 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.zixingchen.discount.widgetex.MyFocusGoodsItemLoyout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="106dp"
     android:background="#40F0F0F0"
@@ -44,4 +44,4 @@
             android:layout_marginTop="8dp"
             android:textColor="#A0522D"/>
     </LinearLayout>
-</LinearLayout>
+</com.zixingchen.discount.widgetex.MyFocusGoodsItemLoyout>
