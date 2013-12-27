@@ -94,7 +94,6 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		lvMyFocus.setOnGroupExpandListener(this);
 		lvMyFocus.setOnChildClickListener(this);
 		
-		
 		//默认展开系统一项
 		if(goodsTypes != null && goodsTypes.size() > 0)
 			lvMyFocus.expandGroup(0);
