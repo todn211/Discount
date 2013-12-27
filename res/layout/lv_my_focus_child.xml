@@ -12,9 +12,10 @@
     	android:background="#8B8989"
     	android:gravity="right|bottom">
         <Button 
+            android:id="@+id/btDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="删除"/>
+            android:text="@string/delete"/>
     </LinearLayout>
     
     <LinearLayout
