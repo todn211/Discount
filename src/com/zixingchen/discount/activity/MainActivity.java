@@ -7,14 +7,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,14 +23,17 @@ import com.zixingchen.discount.common.Page;
 import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
 import com.zixingchen.discount.utils.ImageLoaderUtils;
+import com.zixingchen.discount.widgetex.ExpandableListViewSuper.ExpandableListViewSuper;
+import com.zixingchen.discount.widgetex.ExpandableListViewSuper.MyFocusGoodsItemLoyout;
+import com.zixingchen.discount.widgetex.ExpandableListViewSuper.OnChildOperationListener;
 
 /**
  * 主页
  * @author 陈梓星
  */
-public class MainActivity extends Activity implements OnGroupExpandListener,OnChildClickListener{
+public class MainActivity extends Activity implements OnGroupExpandListener,OnChildOperationListener{
 	
-	private ExpandableListView lvMyFocus;//关注的列表
+	private ExpandableListViewSuper lvMyFocus;//关注的列表
 	private List<GoodsType> goodsTypes;//关注的商品类型集合
 	private Button btRefresh;//刷新
 	private Button btAdd;//添加关注 
@@ -83,7 +83,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * 初始化关注列表
 	 */
 	private void initLvlvMyFocus(){
-		lvMyFocus = (ExpandableListView)this.findViewById(R.id.lvMyFocus);
+		lvMyFocus = (ExpandableListViewSuper)this.findViewById(R.id.lvMyFocus);
 		
 		//初始化商品类型集合数据
 		if(goodsTypes == null || goodsTypes.size() == 0){
@@ -92,7 +92,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		
 		lvMyFocus.setAdapter(new lvMyFocusAdapter());
 		lvMyFocus.setOnGroupExpandListener(this);
-		lvMyFocus.setOnChildClickListener(this);
+		lvMyFocus.setOnChildOperationListener(this);
 		
 		//默认展开系统一项
 		if(goodsTypes != null && goodsTypes.size() > 0)
@@ -103,15 +103,23 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * 切换到商品详细页面
 	 */
 	@Override
-	public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
-//		Intent intent = new Intent(this,GoodsDeailActivity.class);
-//		intent.putExtra("GoodsItem", goodsTypes.get(groupPosition).getGoodses().get(childPosition));
-//		this.startActivity(intent);
+	public void onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition) {
+		Intent intent = new Intent(this,GoodsDeailActivity.class);
+		intent.putExtra("GoodsItem", goodsTypes.get(groupPosition).getGoodses().get(childPosition));
+		this.startActivity(intent);
 		
-		
-		System.out.println("*************onChildClick************");
-		
-		return true;
+//		System.out.println("*************onChildClick************");
+	}
+
+	/**
+	 * 删除关注
+	 */
+	@Override
+	public void onChildDelete(ExpandableListView parent, View v,int groupPosition, int childPosition) {
+		lvMyFocusAdapter adapter = (lvMyFocusAdapter)lvMyFocus.getExpandableListAdapter();
+		GoodsType goodsType = goodsTypes.get(groupPosition);
+		goodsType.getGoodses().remove(childPosition);
+		adapter.notifyDataSetChanged();
 	}
 	
 	/**
@@ -193,6 +201,12 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 				convertView = MainActivity.this.getLayoutInflater().inflate(R.layout.lv_my_focus_child, parent,false);
 			}
 			
+			//把当前索引传递给视图
+			MyFocusGoodsItemLoyout myFocusGoodsItemLoyout = (MyFocusGoodsItemLoyout)convertView;
+			myFocusGoodsItemLoyout.setGroupPosition(groupPosition);
+			myFocusGoodsItemLoyout.setChildPosition(childPosition);
+			myFocusGoodsItemLoyout.resetViewPosition();
+			
 			Goods goods = goodsTypes.get(groupPosition).getGoodses().get(childPosition);
 			
 			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
@@ -201,13 +215,13 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			TextView tvPrePrice = (TextView) convertView.findViewById(R.id.tvPrePrice);
 			tvPrePrice.setText("上次价格：" + goods.getPrePrice());
 			
-//			//加载当前价格
-//			TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
-//			if(TextUtils.isEmpty(goods.getPriceCache())){
-//				goodsBusiness.loadGoodsPrice(goods, tvCurrentPrice);
-//			}else{
-//				tvCurrentPrice.setText(goods.getPriceCache());
-//			}
+			//加载当前价格
+			TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
+			if(TextUtils.isEmpty(goods.getPriceCache())){
+				goodsBusiness.loadGoodsPrice(goods, tvCurrentPrice);
+			}else{
+				tvCurrentPrice.setText(goods.getPriceCache());
+			}
 			
 			//加载当前图标
 			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
