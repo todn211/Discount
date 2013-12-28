@@ -15,7 +15,6 @@ import com.zixingchen.discount.R;
  * 我的关注列表子元素视图
  * @author 陈梓星
  */
-@SuppressLint("NewApi")
 public class MyFocusGoodsItemLoyout extends RelativeLayout {
 
 	private GestureDetector gestureDetector;
@@ -83,13 +82,10 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 	 * 重置视图位置
 	 */
 	public void resetViewPosition(){
-//		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) moveTarget.getLayoutParams();
-//		params.leftMargin = 0;
-//		params.width = getMeasuredWidth();
-//		params.height = getMeasuredHeight();
-//		moveTarget.setLayoutParams(params);
-		
-		moveTarget.setX(0);
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) moveTarget.getLayoutParams();
+		params.leftMargin = 0;
+		params.topMargin = 0;
+		moveTarget.setLayoutParams(params);
 	}
 	
 	/**
