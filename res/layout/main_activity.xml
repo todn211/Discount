@@ -50,7 +50,7 @@
     </LinearLayout>
 
     <!-- 主内容区域 -->
-    <com.zixingchen.discount.widgetex.ExpandableListViewEx 
+    <com.zixingchen.discount.widgetex.ExpandableListViewSuper.ExpandableListViewSuper 
         android:id="@+id/lvMyFocus"
         android:divider="#CBCBCB"
         android:dividerHeight="1dp"
