@@ -20,6 +20,6 @@ public class SettingsActivity extends Activity {
 	public void onBtBackClick(View view){
 		this.finish();
 		//执行页面切换效果
-		this.overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+//		this.overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
 	}
 }

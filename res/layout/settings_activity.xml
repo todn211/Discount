@@ -47,75 +47,84 @@
     </LinearLayout>
 
     <!-- 主内容区域 -->
-    <LinearLayout 
+
+    <RelativeLayout
+        style="@style/setting_container"
         android:layout_width="match_parent"
-   		android:layout_height="150dp"
-   		android:orientation="vertical"
-   		android:layout_margin="10dp"
-   		style="@style/setting_container">
-       	
-        <TextView 
-            android:layout_width="match_parent"
-   			android:layout_height="50dp"
-   			android:gravity="center_vertical"
-            android:text="AAABBB"/>
-        
-        <View 
-            android:layout_width="match_parent"
-   			android:layout_height="1dp"
-   			android:background="#eeffee"/>
-       	
-        <TextView 
-            android:layout_width="match_parent"
-   			android:layout_height="50dp"
-   			android:gravity="center_vertical"
-            android:text="AAABBB"/>
-        
-        <View 
-            android:layout_width="match_parent"
-   			android:layout_height="1dp"
-   			android:background="#eeffee"/>
-       	
-        <TextView 
-            android:layout_width="match_parent"
-   			android:layout_height="50dp"
-   			android:gravity="center_vertical"
-            android:text="AAABBB"/>
-    </LinearLayout>
+        android:layout_height="50dp"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/tvPushInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:textStyle="bold"
+            android:text="开启降价通知" />
+
+        <CheckBox
+            android:id="@+id/cbPushInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"/>
+    </RelativeLayout>
     
     <LinearLayout 
         android:layout_width="match_parent"
-   		android:layout_height="150dp"
+   		android:layout_height="110dp"
    		android:orientation="vertical"
    		android:layout_margin="10dp"
    		style="@style/setting_container">
        	
-        <TextView 
-            android:layout_width="match_parent"
+        <RelativeLayout
+       	    android:layout_width="match_parent"
    			android:layout_height="50dp"
-   			android:gravity="center_vertical"
-            android:text="AAABBB"/>
+   			android:layout_marginLeft="10dp"
+   			android:gravity="center_vertical">
+       	    
+       	    <TextView
+       	        android:id="@+id/tvContactUs"
+	            android:layout_width="wrap_content"
+	   			android:layout_height="wrap_content"
+	   			android:textStyle="bold"
+	            android:text="联系我们"/>
+       	    
+       	    <ImageView 
+       	        android:layout_width="wrap_content"
+       	        android:layout_height="wrap_content"
+       	        android:src="@drawable/arrow_right"
+       	        android:layout_alignParentTop="true"
+	            android:layout_alignParentRight="true"
+	            android:layout_marginRight="10dp"/>
+       	</RelativeLayout>
         
         <View 
             android:layout_width="match_parent"
    			android:layout_height="1dp"
    			android:background="#eeffee"/>
-       	
-        <TextView 
-            android:layout_width="match_parent"
-   			android:layout_height="50dp"
-   			android:gravity="center_vertical"
-            android:text="AAABBB"/>
         
-        <View 
-            android:layout_width="match_parent"
-   			android:layout_height="1dp"
-   			android:background="#eeffee"/>
-       	
-        <TextView 
-            android:layout_width="match_parent"
+       	<RelativeLayout
+       	    android:layout_width="match_parent"
    			android:layout_height="50dp"
-   			android:gravity="center_vertical"
-            android:text="AAABBB"/>
+   			android:layout_marginLeft="10dp"
+   			android:gravity="center_vertical">
+       	    
+       	    <TextView
+       	        android:id="@+id/tvAbout"
+	            android:layout_width="wrap_content"
+	   			android:layout_height="wrap_content"
+	   			android:textStyle="bold"
+	            android:text="关于"/>
+       	    
+       	    <ImageView 
+       	        android:layout_width="wrap_content"
+       	        android:layout_height="wrap_content"
+       	        android:src="@drawable/arrow_right"
+       	        android:layout_alignParentTop="true"
+	            android:layout_alignParentRight="true"
+	            android:layout_marginRight="10dp"/>
+       	</RelativeLayout>
     </LinearLayout>
 </LinearLayout>
