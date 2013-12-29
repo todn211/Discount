@@ -15,6 +15,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsBusiness;
@@ -60,11 +61,10 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * 刷新关注的列表
 	 * @param view
 	 */
-	@SuppressLint("NewApi")
 	public void onBtRefreshClick(View view){
 //		new DBHelp(this, 1).insertGoodsType();
 		
-		testView.setX(100f);
+		this.startActivity(new Intent(this,SettingsActivity.class));
 	}
 	
 	/**
@@ -107,8 +107,6 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		Intent intent = new Intent(this,GoodsDeailActivity.class);
 		intent.putExtra("GoodsItem", goodsTypes.get(groupPosition).getGoodses().get(childPosition));
 		this.startActivity(intent);
-		
-//		System.out.println("*************onChildClick************");
 	}
 
 	/**
@@ -118,8 +116,15 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	public void onChildDelete(ExpandableListView parent, View v,int groupPosition, int childPosition) {
 		lvMyFocusAdapter adapter = (lvMyFocusAdapter)lvMyFocus.getExpandableListAdapter();
 		GoodsType goodsType = goodsTypes.get(groupPosition);
-		goodsType.getGoodses().remove(childPosition);
-		adapter.notifyDataSetChanged();
+		Goods goods = goodsType.getGoodses().get(childPosition);
+		boolean deleteResult = goodsBusiness.deleteFocusGoodsById(goods.getId());
+		goods = null;
+		if(deleteResult){
+			goodsType.getGoodses().remove(childPosition);
+			adapter.notifyDataSetChanged();
+		}else
+			Toast.makeText(this, "消息关注失败！", Toast.LENGTH_SHORT).show();
+		
 	}
 	
 	/**

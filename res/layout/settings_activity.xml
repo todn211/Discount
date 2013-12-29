@@ -1,0 +1,121 @@
+<!-- 软件设置页面 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/goods_type_bg"
+    tools:context=".MainActivity">
+
+    <!-- 工具条 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/toolbar_bg"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/cornersButton"
+            android:text="@string/back"
+            android:drawableLeft="@drawable/back_icon"
+            android:drawablePadding="5dp"
+            android:onClick="onBtBackClick"/>
+            
+        
+        <TextView 
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/setting"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_weight="100"
+            android:gravity="center_horizontal"
+            />
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+    </LinearLayout>
+
+    <!-- 主内容区域 -->
+    <LinearLayout 
+        android:layout_width="match_parent"
+   		android:layout_height="150dp"
+   		android:orientation="vertical"
+   		android:layout_margin="10dp"
+   		style="@style/setting_container">
+       	
+        <TextView 
+            android:layout_width="match_parent"
+   			android:layout_height="50dp"
+   			android:gravity="center_vertical"
+            android:text="AAABBB"/>
+        
+        <View 
+            android:layout_width="match_parent"
+   			android:layout_height="1dp"
+   			android:background="#eeffee"/>
+       	
+        <TextView 
+            android:layout_width="match_parent"
+   			android:layout_height="50dp"
+   			android:gravity="center_vertical"
+            android:text="AAABBB"/>
+        
+        <View 
+            android:layout_width="match_parent"
+   			android:layout_height="1dp"
+   			android:background="#eeffee"/>
+       	
+        <TextView 
+            android:layout_width="match_parent"
+   			android:layout_height="50dp"
+   			android:gravity="center_vertical"
+            android:text="AAABBB"/>
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+   		android:layout_height="150dp"
+   		android:orientation="vertical"
+   		android:layout_margin="10dp"
+   		style="@style/setting_container">
+       	
+        <TextView 
+            android:layout_width="match_parent"
+   			android:layout_height="50dp"
+   			android:gravity="center_vertical"
+            android:text="AAABBB"/>
+        
+        <View 
+            android:layout_width="match_parent"
+   			android:layout_height="1dp"
+   			android:background="#eeffee"/>
+       	
+        <TextView 
+            android:layout_width="match_parent"
+   			android:layout_height="50dp"
+   			android:gravity="center_vertical"
+            android:text="AAABBB"/>
+        
+        <View 
+            android:layout_width="match_parent"
+   			android:layout_height="1dp"
+   			android:background="#eeffee"/>
+       	
+        <TextView 
+            android:layout_width="match_parent"
+   			android:layout_height="50dp"
+   			android:gravity="center_vertical"
+            android:text="AAABBB"/>
+    </LinearLayout>
+</LinearLayout>

@@ -56,6 +56,34 @@ private DBHelp dbHelp;
 	}
 	
 	/**
+	 * 根据商品ID删除关注的商品
+	 * @param id 要删除的关注的商品ID
+	 * @return 成功删除时返回true
+	 */
+	public boolean deleteFocusGoodsById(Long id){
+		
+		SQLiteDatabase db = dbHelp.getWritableDatabase();
+		try {
+			db.beginTransaction();
+			ContentValues values = new ContentValues();
+			values.put("ID", id);
+			int result = db.delete("focus_goods", "id=?", new String[]{String.valueOf(id)});
+			db.setTransactionSuccessful();
+			
+			if(result != 0)
+				return true;
+			else
+				return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			db.endTransaction();
+			db.close();
+		}
+		return false;
+	}
+	
+	/**
 	 * 搜索关注的商品对象
 	 * @param filter 过滤条件(可过滤的属性：name、id、goodsTypeId)
 	 * @return 商品对象集合

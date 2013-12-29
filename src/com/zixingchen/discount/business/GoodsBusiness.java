@@ -76,6 +76,15 @@ public class GoodsBusiness {
 	}
 	
 	/**
+	 * 根据商品ID删除关注的商品
+	 * @param id 要删除的关注的商品ID
+	 * @return 成功删除时返回true
+	 */
+	public boolean deleteFocusGoodsById(Long id){
+		return goodsDao.deleteFocusGoodsById(id);
+	}
+	
+	/**
 	 * 根据商品类型获取相应关注的商品列表
 	 * @param goodsType 商品类型
 	 * @param page 分页对象

@@ -7,8 +7,8 @@
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="18" />
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="com.zixingchen.discount.utils.ContextUtil"
@@ -30,21 +30,16 @@
         </activity>
 
         <!-- 商品类型展示页面 -->
-        <activity
-            android:name="com.zixingchen.discount.activity.GoodsTypeActivity"
-            android:label="@string/title_activity_goods_selected" />
-        
+        <activity  android:name="com.zixingchen.discount.activity.GoodsTypeActivity"/>
+
         <!-- 商品列表展示页面 -->
-        <activity
-            android:name="com.zixingchen.discount.activity.GoodsListActivity"
-            android:label="@string/title_activity_goods" >
-        </activity>
-        
+        <activity android:name="com.zixingchen.discount.activity.GoodsListActivity"/>
+
         <!-- 商品详细信息展示页面 -->
-        <activity
-            android:name="com.zixingchen.discount.activity.GoodsDeailActivity"
-            android:label="@string/title_activity_goods" >
-        </activity>
+        <activity android:name="com.zixingchen.discount.activity.GoodsDeailActivity"/>
+        
+        <!-- 软件设置页面 -->
+        <activity android:name="com.zixingchen.discount.activity.SettingsActivity"/>
     </application>
 
 </manifest>
