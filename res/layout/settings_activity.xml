@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:background="@drawable/goods_type_bg"
-    tools:context=".MainActivity">
+    tools:context=".SettingsActivity">
 
     <!-- 工具条 -->
     <LinearLayout
@@ -47,7 +47,6 @@
     </LinearLayout>
 
     <!-- 主内容区域 -->
-
     <RelativeLayout
         style="@style/setting_container"
         android:layout_width="match_parent"
@@ -61,7 +60,7 @@
             android:gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:textStyle="bold"
-            android:text="开启降价通知" />
+            android:text="@string/enablePriceReducedNotify" />
 
         <CheckBox
             android:id="@+id/cbPushInfo"
@@ -73,23 +72,26 @@
     
     <LinearLayout 
         android:layout_width="match_parent"
-   		android:layout_height="110dp"
+   		android:layout_height="103dp"
    		android:orientation="vertical"
    		android:layout_margin="10dp"
+   		android:padding="1dp"
    		style="@style/setting_container">
        	
         <RelativeLayout
        	    android:layout_width="match_parent"
    			android:layout_height="50dp"
-   			android:layout_marginLeft="10dp"
-   			android:gravity="center_vertical">
+   			android:gravity="center_vertical"
+   			style="@style/setting_item"
+	   		android:clickable="true">
        	    
        	    <TextView
        	        android:id="@+id/tvContactUs"
 	            android:layout_width="wrap_content"
 	   			android:layout_height="wrap_content"
+	   			android:paddingLeft="10dp"
 	   			android:textStyle="bold"
-	            android:text="联系我们"/>
+	            android:text="@string/contactUs"/>
        	    
        	    <ImageView 
        	        android:layout_width="wrap_content"
@@ -97,7 +99,8 @@
        	        android:src="@drawable/arrow_right"
        	        android:layout_alignParentTop="true"
 	            android:layout_alignParentRight="true"
-	            android:layout_marginRight="10dp"/>
+	            android:layout_marginRight="10dp"
+	            android:contentDescription="@string/imgContentDescript"/>
        	</RelativeLayout>
         
         <View 
@@ -108,15 +111,17 @@
        	<RelativeLayout
        	    android:layout_width="match_parent"
    			android:layout_height="50dp"
-   			android:layout_marginLeft="10dp"
-   			android:gravity="center_vertical">
+   			android:gravity="center_vertical"
+   			style="@style/setting_item"
+	   		android:clickable="true">
        	    
        	    <TextView
        	        android:id="@+id/tvAbout"
 	            android:layout_width="wrap_content"
 	   			android:layout_height="wrap_content"
+	   			android:paddingLeft="10dp"
 	   			android:textStyle="bold"
-	            android:text="关于"/>
+	            android:text="@string/about"/>
        	    
        	    <ImageView 
        	        android:layout_width="wrap_content"
@@ -124,7 +129,8 @@
        	        android:src="@drawable/arrow_right"
        	        android:layout_alignParentTop="true"
 	            android:layout_alignParentRight="true"
-	            android:layout_marginRight="10dp"/>
+	            android:layout_marginRight="10dp"
+	            android:contentDescription="@string/imgContentDescript"/>
        	</RelativeLayout>
     </LinearLayout>
 </LinearLayout>

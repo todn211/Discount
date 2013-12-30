@@ -17,5 +17,8 @@
     <string name="failure">失败</string>
     <string name="delete">删除</string>
     <string name="setting">设置</string>
+    <string name="contactUs">联系我们</string>
+    <string name="about">关于</string>
+    <string name="enablePriceReducedNotify">开启降价通知</string>
 
 </resources>

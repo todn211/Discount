@@ -5,8 +5,11 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -14,6 +17,7 @@ import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,10 +65,24 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * 刷新关注的列表
 	 * @param view
 	 */
+	@SuppressLint("NewApi")
 	public void onBtRefreshClick(View view){
-//		new DBHelp(this, 1).insertGoodsType();
+//		this.startActivity(new Intent(this,SettingsActivity.class));
 		
-		this.startActivity(new Intent(this,SettingsActivity.class));
+		int[] point = new int[2];
+		view.getLocationOnScreen(point);
+		int x = point[0] + view.getWidth() / 2;
+		int y = point[1] + view.getHeight();
+		
+		PopupWindow popupWindow = new PopupWindow(this);
+		View contentView = this.getLayoutInflater().inflate(R.layout.more_menu_container, null);
+		popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		popupWindow.setContentView(contentView);
+//		popupWindow.setOutsideTouchable(true);
+		popupWindow.setFocusable(true);
+		popupWindow.setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT,
+	            ViewGroup.LayoutParams.WRAP_CONTENT);
+		popupWindow.showAtLocation(findViewById(android.R.id.content) , Gravity.LEFT | Gravity.TOP, x, y);
 	}
 	
 	/**
