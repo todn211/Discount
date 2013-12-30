@@ -9,7 +9,7 @@
 
     <Button
         android:id="@+id/btAdd"
-        style="@style/cornersButtonOrange"
+        style="@style/cornersButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/add_icon"
