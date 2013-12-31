@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseExpandableListAdapter;
@@ -53,6 +55,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	private PopupMenuWindow popupMenuWindow;//更新菜单弹出窗口
 	private EditText etSearch;//搜索框
 	private Button btSearchOrBack;//搜索或者返回按钮
+	private InputMethodManager imm;//输入法管理者
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,9 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		
 		goodsTypeBusiness = new GoodsTypeBusiness();
 		goodsBusiness = new GoodsBusiness();
+		
+		//初化//输入法管理者
+		imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		
 		//初始化关注列表 
 		initLvlvMyFocus();		
@@ -126,6 +132,9 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			LinearLayout searchContainer = (LinearLayout) this.findViewById(R.id.searchContainer);
 			searchContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.out_to_right));
 			searchContainer.setVisibility(View.INVISIBLE);
+			
+			//隐藏键盘
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0); 
 		}else{
 			
 		}
