@@ -4,23 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_horizontal"
-    android:background="@drawable/arrow_contain_top_right">
+    android:background="@drawable/arrow_contain_top_right"
+    android:orientation="vertical" >
 
     <Button
+        android:id="@+id/btAdd"
+        style="@style/cornersButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ABC" />
+        android:drawableLeft="@drawable/add_icon"
+        android:onClick="onBtAddClick"
+        android:text="@string/add" />
+
+    <View
+        android:layout_width="110dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        android:background="#eeffee"/>
 
     <Button
+        android:id="@+id/btSearch"
+        style="@style/cornersButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ABC" />
+        android:drawableLeft="@drawable/add_icon"
+        android:text="@string/search"/>
+
+    <View
+        android:layout_width="110dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        android:background="#eeffee"/>
 
     <Button
+        android:id="@+id/btSetting"
+        style="@style/cornersButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ABC" />
+        android:drawableLeft="@drawable/add_icon"
+        android:text="@string/setting" />
 
 </LinearLayout>
