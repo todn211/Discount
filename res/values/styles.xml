@@ -24,13 +24,13 @@
     </style>
     
     <!-- 软件设置页面容器样式 -->
-    <style name="setting_container">
-        <item name="android:background">@drawable/setting_container</item>
+    <style name="settings_container">
+        <item name="android:background">@drawable/settings_container</item>
     </style>
     
     <!-- 软件设置项样式 -->
-    <style name="setting_item">
-        <item name="android:background">@drawable/setting_item_selector</item>
+    <style name="settings_item">
+        <item name="android:background">@drawable/settings_item_selector</item>
     </style>
     
     <!-- 更多操作容器样式 

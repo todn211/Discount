@@ -4,7 +4,7 @@
     <string name="app_name">货比三家</string>
     <string name="myFocus">我的关注</string>
     <string name="allGoodsType">全部商品类型</string>
-    <string name="systemSetting">系统设置</string>
+    <string name="systemSettings">系统设置</string>
     <string name="imgContentDescript">图片说明</string>
     <string name="add">添加</string>
     <string name="refresh">刷新</string>
@@ -16,7 +16,7 @@
     <string name="success">成功</string>
     <string name="failure">失败</string>
     <string name="delete">删除</string>
-    <string name="setting">设置</string>
+    <string name="settings">设置</string>
     <string name="contactUs">联系我们</string>
     <string name="about">关于</string>
     <string name="enablePriceReducedNotify">开启降价通知</string>

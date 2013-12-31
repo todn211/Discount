@@ -32,7 +32,7 @@
         <TextView 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/setting"
+            android:text="@string/settings"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -48,7 +48,7 @@
 
     <!-- 主内容区域 -->
     <RelativeLayout
-        style="@style/setting_container"
+        style="@style/settings_container"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_margin="10dp">
@@ -77,13 +77,13 @@
    		android:orientation="vertical"
    		android:layout_margin="10dp"
    		android:padding="1dp"
-   		style="@style/setting_container">
+   		style="@style/settings_container">
        	
         <RelativeLayout
        	    android:layout_width="match_parent"
    			android:layout_height="50dp"
    			android:gravity="center_vertical"
-   			style="@style/setting_item"
+   			style="@style/settings_item"
 	   		android:clickable="true">
        	    
        	    <TextView
@@ -113,7 +113,7 @@
        	    android:layout_width="match_parent"
    			android:layout_height="50dp"
    			android:gravity="center_vertical"
-   			style="@style/setting_item"
+   			style="@style/settings_item"
 	   		android:clickable="true">
        	    
        	    <TextView

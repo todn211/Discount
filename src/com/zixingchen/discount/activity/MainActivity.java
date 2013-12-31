@@ -88,9 +88,9 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		searchMenuItem.put("icon",Integer.valueOf(android.R.drawable.ic_menu_search));
 		searchMenuItem.put("title", "搜　索");
 		
-		Map<String, Object> settingMenuItem = new HashMap<String, Object>();
-		settingMenuItem.put("icon", Integer.valueOf(android.R.drawable.ic_menu_set_as));
-		settingMenuItem.put("title", "设　置");
+		Map<String, Object> settingsMenuItem = new HashMap<String, Object>();
+		settingsMenuItem.put("icon", Integer.valueOf(android.R.drawable.ic_menu_set_as));
+		settingsMenuItem.put("title", "设　置");
 		
 		Map<String, Object> exitMenuItem = new HashMap<String, Object>();
 		exitMenuItem.put("icon", Integer.valueOf(android.R.drawable.ic_menu_close_clear_cancel));
@@ -98,7 +98,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		
 		menuItems.add(addMenuItem);
 		menuItems.add(searchMenuItem);
-		menuItems.add(settingMenuItem);
+		menuItems.add(settingsMenuItem);
 		menuItems.add(exitMenuItem);
 		popupMenuWindow = new PopupMenuWindow(this,menuItems);
 		

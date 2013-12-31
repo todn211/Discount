@@ -39,11 +39,11 @@
         android:background="#eeffee"/>
 
     <Button
-        android:id="@+id/btSetting"
+        android:id="@+id/btSettings"
         style="@style/cornersButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/add_icon"
-        android:text="@string/setting" />
+        android:text="@string/settings" />
 
 </LinearLayout>
