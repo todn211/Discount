@@ -1,23 +1,23 @@
 package com.zixingchen.discount.activity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +31,7 @@ import com.zixingchen.discount.utils.ImageLoaderUtils;
 import com.zixingchen.discount.widgetex.ExpandableListViewSuper.ExpandableListViewSuper;
 import com.zixingchen.discount.widgetex.ExpandableListViewSuper.MyFocusGoodsItemLoyout;
 import com.zixingchen.discount.widgetex.ExpandableListViewSuper.OnChildOperationListener;
+import com.zixingchen.discount.widgetex.PopupWindowSuper.PopupMenuWindow;
 
 /**
  * 主页
@@ -40,12 +41,9 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	
 	private ExpandableListViewSuper lvMyFocus;//关注的列表
 	private List<GoodsType> goodsTypes;//关注的商品类型集合
-//	private Button btRefresh;//刷新
-//	private Button btAdd;//添加关注 
 	private GoodsTypeBusiness goodsTypeBusiness;
 	private GoodsBusiness goodsBusiness;
-	private View testView;
-	private PopupWindow popupWindow;
+	private PopupMenuWindow popupMenuWindow;//更新菜单弹出窗口
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,33 +54,73 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		goodsBusiness = new GoodsBusiness();
 		
 		//初始化关注列表 
-		initLvlvMyFocus();
+		initLvlvMyFocus();		
 		
-//		btRefresh = (Button) this.findViewById(R.id.btRefresh);
-//		btAdd = (Button) this.findViewById(R.id.btAdd);
-		getWindow().setWindowAnimations(0);
-		
-		popupWindow = new PopupWindow(this);
+		//初始化更多弹出菜单
+		this.initPopupMenuWindow();
 	}
 	
 	/**
-	 * 更多按钮点击事件
+	 * 更多按钮点击事件监听器，用于弹出更多菜单窗口
 	 * @param view
 	 */
 	public void onMoreClick(View view){
+		//获取弹出窗口的坐标
 		int[] point = new int[2];
 		view.getLocationOnScreen(point);
 		int x = point[0] + view.getWidth() / 2;
 		int y = point[1] + view.getHeight();
 		
-		View contentView = this.getLayoutInflater().inflate(R.layout.more_menu_container, null);
-		popupWindow.setBackgroundDrawable(new BitmapDrawable());
-		popupWindow.setContentView(contentView);
-//		popupWindow.setOutsideTouchable(true);
-		popupWindow.setFocusable(true);
-		popupWindow.setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT,
-	            ViewGroup.LayoutParams.WRAP_CONTENT);
-		popupWindow.showAtLocation(findViewById(android.R.id.content) , Gravity.LEFT | Gravity.TOP, x, y);
+		
+		popupMenuWindow.showAtLocation(findViewById(android.R.id.content) , Gravity.LEFT | Gravity.TOP, x, y);
+	}
+	
+	/**
+	 * 初始化更多菜单窗口
+	 */
+	public void initPopupMenuWindow(){
+		List<Map<String, Object>> menuItems = new ArrayList<Map<String,Object>>();
+		Map<String, Object> addMenuItem = new HashMap<String, Object>();
+		addMenuItem.put("icon", Integer.valueOf(R.drawable.add_icon));
+		addMenuItem.put("title", "添　加");
+		
+		Map<String, Object> searchMenuItem = new HashMap<String, Object>();
+		searchMenuItem.put("icon",Integer.valueOf(android.R.drawable.ic_menu_search));
+		searchMenuItem.put("title", "搜　索");
+		
+		Map<String, Object> settingMenuItem = new HashMap<String, Object>();
+		settingMenuItem.put("icon", Integer.valueOf(android.R.drawable.ic_menu_set_as));
+		settingMenuItem.put("title", "设　置");
+		
+		Map<String, Object> exitMenuItem = new HashMap<String, Object>();
+		exitMenuItem.put("icon", Integer.valueOf(android.R.drawable.ic_menu_close_clear_cancel));
+		exitMenuItem.put("title", "退　出");
+		
+		menuItems.add(addMenuItem);
+		menuItems.add(searchMenuItem);
+		menuItems.add(settingMenuItem);
+		menuItems.add(exitMenuItem);
+		popupMenuWindow = new PopupMenuWindow(this,menuItems);
+		
+		popupMenuWindow.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				switch(position){
+					case 0:
+						showGoodsTypeActivity();
+						break;
+					case 1:
+						ShowSearchBar();
+						break;
+					case 2:
+						showSettingsActivity();
+						break;
+					case 3:
+						finish();
+						break;
+				}
+			}
+		});
 	}
 	
 	/**
@@ -90,20 +128,35 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * @param view
 	 */
 	public void onBtRefreshClick(View view){
+		
+	}
+	
+	/**
+	 * 显示搜索工具条
+	 */
+	private void ShowSearchBar(){
+		popupMenuWindow.dismiss();
+	}
+	
+	/**
+	 * 显示软件设置界面
+	 */
+	private void showSettingsActivity(){
 		this.startActivity(new Intent(this,SettingsActivity.class));
+		popupMenuWindow.dismiss();
 	}
 	
 	/**
 	 * 跳转到添加商品关注的界面
 	 * @param view
 	 */
-	public void onBtAddClick(View view){
+	private void showGoodsTypeActivity(){
 		Intent intent = new Intent(this,GoodsTypeActivity.class);
 		intent.putExtra("prevActivityIsMain", true);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_bottom,R.anim.no_anim);
 		
-		popupWindow.dismiss();
+		popupMenuWindow.dismiss();
 	}
 	
 
@@ -259,8 +312,6 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			//加载当前图标
 			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);
 			ImageLoaderUtils.getInstance().displayImage(goods.getIcon(), ivIcon);
-			
-			testView = convertView;
 			
 			return convertView;
 		}
