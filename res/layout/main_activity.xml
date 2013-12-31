@@ -39,14 +39,14 @@
             />
 
         <Button
-            android:id="@+id/btAdd"
+            android:id="@+id/btMore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/cornersButton"
             android:drawableLeft="@drawable/add_icon"
             android:drawablePadding="5dp"
-            android:text="@string/add" 
-            android:onClick="onBtAddClick"/>
+            android:text="@string/more" 
+            android:onClick="onMoreClick"/>
     </LinearLayout>
 
     <!-- 主内容区域 -->

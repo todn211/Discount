@@ -40,11 +40,12 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	
 	private ExpandableListViewSuper lvMyFocus;//关注的列表
 	private List<GoodsType> goodsTypes;//关注的商品类型集合
-	private Button btRefresh;//刷新
-	private Button btAdd;//添加关注 
+//	private Button btRefresh;//刷新
+//	private Button btAdd;//添加关注 
 	private GoodsTypeBusiness goodsTypeBusiness;
 	private GoodsBusiness goodsBusiness;
 	private View testView;
+	private PopupWindow popupWindow;
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,24 +58,23 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		//初始化关注列表 
 		initLvlvMyFocus();
 		
-		btRefresh = (Button) this.findViewById(R.id.btRefresh);
-		btAdd = (Button) this.findViewById(R.id.btAdd);
+//		btRefresh = (Button) this.findViewById(R.id.btRefresh);
+//		btAdd = (Button) this.findViewById(R.id.btAdd);
 		getWindow().setWindowAnimations(0);
+		
+		popupWindow = new PopupWindow(this);
 	}
+	
 	/**
-	 * 刷新关注的列表
+	 * 更多按钮点击事件
 	 * @param view
 	 */
-	@SuppressLint("NewApi")
-	public void onBtRefreshClick(View view){
-//		this.startActivity(new Intent(this,SettingsActivity.class));
-		
+	public void onMoreClick(View view){
 		int[] point = new int[2];
 		view.getLocationOnScreen(point);
 		int x = point[0] + view.getWidth() / 2;
 		int y = point[1] + view.getHeight();
 		
-		PopupWindow popupWindow = new PopupWindow(this);
 		View contentView = this.getLayoutInflater().inflate(R.layout.more_menu_container, null);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
 		popupWindow.setContentView(contentView);
@@ -86,6 +86,14 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	}
 	
 	/**
+	 * 刷新关注的列表
+	 * @param view
+	 */
+	public void onBtRefreshClick(View view){
+		this.startActivity(new Intent(this,SettingsActivity.class));
+	}
+	
+	/**
 	 * 跳转到添加商品关注的界面
 	 * @param view
 	 */
@@ -94,6 +102,8 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		intent.putExtra("prevActivityIsMain", true);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_bottom,R.anim.no_anim);
+		
+		popupWindow.dismiss();
 	}
 	
 
