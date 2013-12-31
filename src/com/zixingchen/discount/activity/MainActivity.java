@@ -45,16 +45,6 @@ import com.zixingchen.discount.widgetex.PopupWindowSuper.PopupMenuWindow;
  */
 public class MainActivity extends Activity implements OnGroupExpandListener,OnChildOperationListener{
 	
-	/**
-	 * 搜索按钮标识
-	 */
-	private static final int SEARCH_BUTTON = 0;
-	
-	/**
-	 * 返回按钮标识
-	 */
-	private static final int BACK_BUTTON = 1;
-	
 	private ExpandableListViewSuper lvMyFocus;//关注的列表
 	private List<GoodsType> goodsTypes;//关注的商品类型集合
 	private GoodsTypeBusiness goodsTypeBusiness;
@@ -94,11 +84,11 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 				if(TextUtils.isEmpty(text)){
 					String back = MainActivity.this.getResources().getString(R.string.back);
 					btSearchOrBack.setText(back);
-					btSearchOrBack.setTag(MainActivity.BACK_BUTTON);
+					btSearchOrBack.setTag(back);
 				}else{
 					String search = MainActivity.this.getResources().getString(R.string.search);
 					btSearchOrBack.setText(search);
-					btSearchOrBack.setTag(MainActivity.SEARCH_BUTTON);
+					btSearchOrBack.setTag(search);
 				}
 			}
 			
@@ -119,8 +109,8 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * @param view
 	 */
 	public void onSearchOrBackClick(View view){
-		int tag = ((Integer)view.getTag()).intValue();
-		if(tag == MainActivity.BACK_BUTTON){
+		String tag = view.getTag().toString();
+		if(tag.equals(this.getResources().getString(R.string.back))){
 			//工具条从左边退出
 			LinearLayout toolbarContainer = (LinearLayout) this.findViewById(R.id.toolbarContainer);
 			toolbarContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.in_from_left));

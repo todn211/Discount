@@ -82,6 +82,7 @@
 	            android:drawableLeft="@drawable/back_icon"
 	            android:drawablePadding="3dp"
 	            android:text="@string/back"
+	            android:tag="@string/back"
 	            android:onClick="onSearchOrBackClick"/>
         </LinearLayout>
     </FrameLayout>
