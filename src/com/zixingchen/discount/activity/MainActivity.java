@@ -8,16 +8,22 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,11 +45,23 @@ import com.zixingchen.discount.widgetex.PopupWindowSuper.PopupMenuWindow;
  */
 public class MainActivity extends Activity implements OnGroupExpandListener,OnChildOperationListener{
 	
+	/**
+	 * 搜索按钮标识
+	 */
+	private static final int SEARCH_BUTTON = 0;
+	
+	/**
+	 * 返回按钮标识
+	 */
+	private static final int BACK_BUTTON = 1;
+	
 	private ExpandableListViewSuper lvMyFocus;//关注的列表
 	private List<GoodsType> goodsTypes;//关注的商品类型集合
 	private GoodsTypeBusiness goodsTypeBusiness;
 	private GoodsBusiness goodsBusiness;
 	private PopupMenuWindow popupMenuWindow;//更新菜单弹出窗口
+	private EditText etSearch;//搜索框
+	private Button btSearchOrBack;//搜索或者返回按钮
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +76,63 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		
 		//初始化更多弹出菜单
 		this.initPopupMenuWindow();
+		
+		//初始化搜索框
+		this.initEtSearch();
+	}
+	
+	/**
+	 * 初始化搜索框
+	 */
+	private void initEtSearch(){
+		btSearchOrBack = (Button) this.findViewById(R.id.btSearchOrBack);
+		etSearch = (EditText) this.findViewById(R.id.etSearch);
+		etSearch.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence text, int start, int before, int count) {
+				if(TextUtils.isEmpty(text)){
+					String back = MainActivity.this.getResources().getString(R.string.back);
+					btSearchOrBack.setText(back);
+					btSearchOrBack.setTag(MainActivity.BACK_BUTTON);
+				}else{
+					String search = MainActivity.this.getResources().getString(R.string.search);
+					btSearchOrBack.setText(search);
+					btSearchOrBack.setTag(MainActivity.SEARCH_BUTTON);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+			}
+		});
+	}
+	
+	/**
+	 * 搜索/返回按钮点击监听事件
+	 * @param view
+	 */
+	public void onSearchOrBackClick(View view){
+		int tag = ((Integer)view.getTag()).intValue();
+		if(tag == MainActivity.BACK_BUTTON){
+			//工具条从左边退出
+			LinearLayout toolbarContainer = (LinearLayout) this.findViewById(R.id.toolbarContainer);
+			toolbarContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.in_from_left));
+			toolbarContainer.setVisibility(View.VISIBLE);
+			
+			//搜索栏从右边进入
+			LinearLayout searchContainer = (LinearLayout) this.findViewById(R.id.searchContainer);
+			searchContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.out_to_right));
+			searchContainer.setVisibility(View.INVISIBLE);
+		}else{
+			
+		}
 	}
 	
 	/**
@@ -82,19 +157,19 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		List<Map<String, Object>> menuItems = new ArrayList<Map<String,Object>>();
 		Map<String, Object> addMenuItem = new HashMap<String, Object>();
 		addMenuItem.put("icon", Integer.valueOf(R.drawable.add_icon));
-		addMenuItem.put("title", "添　加");
+		addMenuItem.put("title", "添 加");
 		
 		Map<String, Object> searchMenuItem = new HashMap<String, Object>();
-		searchMenuItem.put("icon",Integer.valueOf(android.R.drawable.ic_menu_search));
-		searchMenuItem.put("title", "搜　索");
+		searchMenuItem.put("icon",Integer.valueOf(R.drawable.search_icon));
+		searchMenuItem.put("title", "搜 索");
 		
 		Map<String, Object> settingsMenuItem = new HashMap<String, Object>();
-		settingsMenuItem.put("icon", Integer.valueOf(android.R.drawable.ic_menu_set_as));
-		settingsMenuItem.put("title", "设　置");
+		settingsMenuItem.put("icon", Integer.valueOf(R.drawable.settings_icon));
+		settingsMenuItem.put("title", "设 置");
 		
 		Map<String, Object> exitMenuItem = new HashMap<String, Object>();
-		exitMenuItem.put("icon", Integer.valueOf(android.R.drawable.ic_menu_close_clear_cancel));
-		exitMenuItem.put("title", "退　出");
+		exitMenuItem.put("icon", Integer.valueOf(R.drawable.exit_icon));
+		exitMenuItem.put("title", "退 出");
 		
 		menuItems.add(addMenuItem);
 		menuItems.add(searchMenuItem);
@@ -136,6 +211,16 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 */
 	private void ShowSearchBar(){
 		popupMenuWindow.dismiss();
+		
+		//工具条从左边退出
+		LinearLayout toolbarContainer = (LinearLayout) this.findViewById(R.id.toolbarContainer);
+		toolbarContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.out_to_left));
+		toolbarContainer.setVisibility(View.INVISIBLE);
+		
+		//搜索栏从右边进入
+		LinearLayout searchContainer = (LinearLayout) this.findViewById(R.id.searchContainer);
+		searchContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.in_from_right));
+		searchContainer.setVisibility(View.VISIBLE);
 	}
 	
 	/**

@@ -28,7 +28,7 @@ public class PopupMenuWindow extends PopupWindow {
 	private ListView menus;//菜单项列表
 	
 	public PopupMenuWindow(Context context,List<Map<String, Object>> menuItems) {
-		super();
+		super(context);
 		
 		//初始化菜单项列表
 		View menus = this.initMenus(context,menuItems);
@@ -63,13 +63,13 @@ public class PopupMenuWindow extends PopupWindow {
 		String[] from = new String[]{"icon","title"};
 		int[] to = new int[]{R.id.ivIcon,R.id.tvTitle};
 		
-		LayoutParams params = new LayoutParams(PxAndDpUtil.px2dip(context, 125),LayoutParams.WRAP_CONTENT);
+		LayoutParams params = new LayoutParams((int)PxAndDpUtil.dip2px(context, 130f),LayoutParams.WRAP_CONTENT);
 		SimpleAdapter adapter = new SimpleAdapter(context, menuItems, R.layout.popup_menu_window_item, from, to);
 		menus = new ListView(context);
 		menus.setLayoutParams(params);
 		menus.setAdapter(adapter);
 		menus.setDivider(new ColorDrawable(Color.GRAY));
-		menus.setDividerHeight(PxAndDpUtil.px2dip(context, 1));
+		menus.setDividerHeight((int)PxAndDpUtil.dip2px(context, 1f));
 		return menus;
 	}
 
