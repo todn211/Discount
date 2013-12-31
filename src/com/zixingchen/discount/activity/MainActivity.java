@@ -7,6 +7,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -85,10 +86,15 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 					String back = MainActivity.this.getResources().getString(R.string.back);
 					btSearchOrBack.setText(back);
 					btSearchOrBack.setTag(back);
+					Drawable backDrawable = MainActivity.this.getResources().getDrawable(R.drawable.back_icon);
+					btSearchOrBack.setCompoundDrawablesWithIntrinsicBounds(backDrawable, null, null, null);
 				}else{
 					String search = MainActivity.this.getResources().getString(R.string.search);
 					btSearchOrBack.setText(search);
 					btSearchOrBack.setTag(search);
+					
+					Drawable searchDrawable = MainActivity.this.getResources().getDrawable(R.drawable.search_icon);
+					btSearchOrBack.setCompoundDrawablesWithIntrinsicBounds(searchDrawable, null, null, null);
 				}
 			}
 			
