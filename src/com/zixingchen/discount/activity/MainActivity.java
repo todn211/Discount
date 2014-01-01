@@ -88,13 +88,14 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			
 			@Override
 			public void onTextChanged(CharSequence text, int start, int before, int count) {
+				//如果搜索框的内容为空，就把搜索按钮切换成回返按钮，否则为搜索按钮
 				if(TextUtils.isEmpty(text)){
 					String back = MainActivity.this.getResources().getString(R.string.back);
 					btSearchOrBack.setText(back);
 					btSearchOrBack.setTag(back);
 					Drawable backDrawable = MainActivity.this.getResources().getDrawable(R.drawable.back_icon);
 					btSearchOrBack.setCompoundDrawablesWithIntrinsicBounds(backDrawable, null, null, null);
-				}else{
+				}else if(!btSearchOrBack.equals(MainActivity.this.getResources().getString(R.string.search))){
 					String search = MainActivity.this.getResources().getString(R.string.search);
 					btSearchOrBack.setText(search);
 					btSearchOrBack.setTag(search);
@@ -122,22 +123,29 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 */
 	public void onSearchOrBackClick(View view){
 		String tag = view.getTag().toString();
+		LinearLayout toolbarContainer = (LinearLayout) this.findViewById(R.id.toolbarContainer);
+		LinearLayout searchContainer = (LinearLayout) this.findViewById(R.id.searchContainer);
 		if(tag.equals(this.getResources().getString(R.string.back))){
-			//工具条从左边退出
-			LinearLayout toolbarContainer = (LinearLayout) this.findViewById(R.id.toolbarContainer);
+			//工具条从左边进入
 			toolbarContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.in_from_left));
-			toolbarContainer.setVisibility(View.VISIBLE);
 			
-			//搜索栏从右边进入
-			LinearLayout searchContainer = (LinearLayout) this.findViewById(R.id.searchContainer);
+			//搜索栏从右边退出
 			searchContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.out_to_right));
-			searchContainer.setVisibility(View.INVISIBLE);
-			
-			//隐藏键盘
-			imm.hideSoftInputFromWindow(view.getWindowToken(), 0); 
 		}else{
-			
+			//搜索商品
+			String goodsName = etSearch.getText().toString();
+			GoodsType goodsType = new GoodsType();
+			goodsType.setKeyWord(goodsName);
+			goodsType.setId(0L);
+			goodsType.setName(goodsName);
+			Intent intent = new Intent(this,GoodsListActivity.class);
+			intent.putExtra("goodsType", goodsType);
+			this.startActivity(intent);
 		}
+		
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//隐藏键盘
+		toolbarContainer.setVisibility(View.VISIBLE);
+		searchContainer.setVisibility(View.INVISIBLE);
 	}
 	
 	/**
@@ -162,19 +170,19 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		List<Map<String, Object>> menuItems = new ArrayList<Map<String,Object>>();
 		Map<String, Object> addMenuItem = new HashMap<String, Object>();
 		addMenuItem.put("icon", Integer.valueOf(R.drawable.add_icon));
-		addMenuItem.put("title", "添 加");
+		addMenuItem.put("title", MainActivity.this.getResources().getString(R.string.add));
 		
 		Map<String, Object> searchMenuItem = new HashMap<String, Object>();
 		searchMenuItem.put("icon",Integer.valueOf(R.drawable.search_icon));
-		searchMenuItem.put("title", "搜 索");
+		searchMenuItem.put("title", MainActivity.this.getResources().getString(R.string.search));
 		
 		Map<String, Object> settingsMenuItem = new HashMap<String, Object>();
 		settingsMenuItem.put("icon", Integer.valueOf(R.drawable.settings_icon));
-		settingsMenuItem.put("title", "设 置");
+		settingsMenuItem.put("title", MainActivity.this.getResources().getString(R.string.settings));
 		
 		Map<String, Object> exitMenuItem = new HashMap<String, Object>();
 		exitMenuItem.put("icon", Integer.valueOf(R.drawable.exit_icon));
-		exitMenuItem.put("title", "退 出");
+		exitMenuItem.put("title", MainActivity.this.getResources().getString(R.string.close));
 		
 		menuItems.add(addMenuItem);
 		menuItems.add(searchMenuItem);

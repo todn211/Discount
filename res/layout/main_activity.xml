@@ -72,7 +72,8 @@
 	            android:layout_weight="100"
 	            android:hint="@string/inputTheGoodsName"
 	            style="@style/corners_input_widget"
-	            android:layout_marginRight="5dp"/>
+	            android:layout_marginRight="5dp"
+	            android:text="小米手机"/>
             
             <Button 
                 android:id="@+id/btSearchOrBack"

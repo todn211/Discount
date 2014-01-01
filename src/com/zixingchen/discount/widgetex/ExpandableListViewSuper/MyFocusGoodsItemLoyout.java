@@ -1,14 +1,15 @@
 package com.zixingchen.discount.widgetex.ExpandableListViewSuper;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+
 import com.zixingchen.discount.R;
 
 /**
@@ -21,7 +22,7 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 	private Context context;
 	private Button btDelete;
 	private boolean isInterceptEevntToChild = true;//是否拦截事件传递到子控件
-	private View moveTarget;//位于顶层的，需要向左移动的容器
+	private ViewGroup moveTarget;//位于顶层的，需要向左移动的容器
 	private int btDeleteWidth;//删除按键的宽度
 	private int groupPosition;//分组位置
 	private int childPosition;//组下面元素子位置
@@ -36,6 +37,13 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
 		btDeleteWidth = this.findViewById(R.id.btDelete).getMeasuredWidth();
+	}
+	
+	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+		isInterceptEevntToChild = true;
 	}
 	
 	@Override
@@ -60,6 +68,7 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if(MotionEvent.ACTION_UP == event.getAction()){
+					//如果顶层视图没有被拖到最左边，就把拦截传递到子视图的事件标记为true
 					if(moveTarget.getLeft() != -btDeleteWidth){
 						resetViewPosition();
 						isInterceptEevntToChild = true;
@@ -93,11 +102,27 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 	 */
 	private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		public MyGestureListener() {
-			moveTarget = MyFocusGoodsItemLoyout.this.getChildAt(1);
+			moveTarget = (ViewGroup) MyFocusGoodsItemLoyout.this.getChildAt(1);
 		}
 		
 		/**
-		 * 我的关注元素点击事件
+		 * 按下事件，在ExpandableListViewSuper中记录当前对象，以便在向上、下滚动时如果当前位置有变动则复位
+		 */
+		@Override
+		public boolean onDown(MotionEvent e) {
+			ExpandableListViewSuper expandableListView = (ExpandableListViewSuper) MyFocusGoodsItemLoyout.this.getParent();
+			
+			if(expandableListView.getCurrentItem() != null){
+				expandableListView.getCurrentItem().resetViewPosition();
+			}
+			
+			expandableListView.setCurrentItem(MyFocusGoodsItemLoyout.this);
+			
+			return super.onDown(e);
+		}
+		
+		/**
+		 * 我的关注元素点击事件，把当前点击事件包装再发布出去
 		 */
 		@Override
 		public boolean onSingleTapUp(MotionEvent e) {

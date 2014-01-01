@@ -3,7 +3,6 @@ package com.zixingchen.discount.activity;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import com.zixingchen.discount.utils.ImageLoaderUtils;
  * 商品列表页面
  * @author 陈梓星
  */
-@SuppressLint("HandlerLeak")
 public class GoodsListActivity extends Activity implements OnItemClickListener{
 	
 	private GoodsType goodsType;//所属商品类型对象
