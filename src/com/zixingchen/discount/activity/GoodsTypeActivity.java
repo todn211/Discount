@@ -112,7 +112,7 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 	}
 	
 	/**
-	 * 商品点击事件
+	 * 商品类型点击事件
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -125,7 +125,6 @@ public class GoodsTypeActivity extends Activity implements OnItemClickListener{
 			intent = new Intent(this,GoodsTypeActivity.class);
 		}
 		
-//		intent.putExtra("title", goodsTypes.get(position).getName());
 		intent.putExtra("goodsType", goodsType);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);

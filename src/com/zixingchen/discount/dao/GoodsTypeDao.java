@@ -101,6 +101,16 @@ public class GoodsTypeDao {
 				sql.append("and KEY_WORD=?");
 				args.add(filter.getKeyWord());
 			}
+			
+			if(!TextUtils.isEmpty(filter.isLeaf())){
+				sql.append("and IS_LEAF=?");
+				args.add(filter.isLeaf());
+			}
+			
+			if(!TextUtils.isEmpty(filter.isShow())){
+				sql.append("and IS_SHOW=?");
+				args.add(filter.isShow());
+			}
 		}
 		
 		SQLiteDatabase db = dbHelp.getReadableDatabase();

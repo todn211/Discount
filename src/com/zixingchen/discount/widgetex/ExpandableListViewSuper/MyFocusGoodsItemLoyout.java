@@ -1,5 +1,6 @@
 package com.zixingchen.discount.widgetex.ExpandableListViewSuper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -9,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-
 import com.zixingchen.discount.R;
 
 /**
@@ -43,7 +43,12 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		isInterceptEevntToChild = true;
+		//如果顶层视图没有被拖到最左边，就把拦截传递到子视图的事件标记为true
+		if(moveTarget != null && moveTarget.getLeft() != -btDeleteWidth){
+			isInterceptEevntToChild = true;
+		}else{
+			isInterceptEevntToChild = false;
+		}
 	}
 	
 	@Override
@@ -68,12 +73,9 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				if(MotionEvent.ACTION_UP == event.getAction()){
-					//如果顶层视图没有被拖到最左边，就把拦截传递到子视图的事件标记为true
+					//如果顶层视图没有被拖到最左边，就把其还原到原来的位置
 					if(moveTarget.getLeft() != -btDeleteWidth){
 						resetViewPosition();
-						isInterceptEevntToChild = true;
-					}else{
-						isInterceptEevntToChild = false;
 					}
 				}
 				return gestureDetector.onTouchEvent(event);
@@ -100,6 +102,7 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 	/**
 	 * 手势识别对象
 	 */
+	@SuppressLint("NewApi")
 	private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 		public MyGestureListener() {
 			moveTarget = (ViewGroup) MyFocusGoodsItemLoyout.this.getChildAt(1);
@@ -112,7 +115,7 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 		public boolean onDown(MotionEvent e) {
 			ExpandableListViewSuper expandableListView = (ExpandableListViewSuper) MyFocusGoodsItemLoyout.this.getParent();
 			
-			if(expandableListView.getCurrentItem() != null){
+			if(expandableListView.getCurrentItem() != null && expandableListView.getCurrentItem() != MyFocusGoodsItemLoyout.this){
 				expandableListView.getCurrentItem().resetViewPosition();
 			}
 			

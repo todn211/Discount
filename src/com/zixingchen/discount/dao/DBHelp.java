@@ -71,7 +71,17 @@ public class DBHelp extends SQLiteOpenHelper {
 			
 			db.beginTransaction();
 			db.execSQL(sql);
+			
+			//默认插入一条记录，ID为-1，用于收集用户关注搜索的商品
+			ContentValues values = new ContentValues();
+			values.put("ID", GoodsType.DEFAULT_ID);
+			values.put("NAME", "我的搜索");
+			values.put("PARENT_ID", GoodsType.DEFAULT_ID);
+			values.put("IS_LEAF", GoodsType.YES);
+			values.put("IS_SHOW", GoodsType.NO);
+			db.insert("goods_type", null, values);
 
+			
 			//初始化表数据
 			InputStream in = context.getAssets().open("goodsTpye.json");
 			String goodsTpyeJSONString = StreamUtil.convertStreamToString(in);
@@ -119,6 +129,7 @@ public class DBHelp extends SQLiteOpenHelper {
 		values.put("NAME", goodstypeJSON.getString("name"));
 		values.put("PARENT_ID", parentId);
 		values.put("IS_LEAF", isLeaf);
+		values.put("IS_SHOW", GoodsType.YES);
 		
 		if(!goodstypeJSON.isNull("cat")){
 			values.put("TYPE_CODE", goodstypeJSON.getString("cat"));

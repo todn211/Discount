@@ -12,6 +12,7 @@ public class GoodsType implements Serializable{
 	
 	public static final String YES = "Y";
 	public static final String NO = "N";
+	public static final long DEFAULT_ID = -1;
 	
 	private Long id;
 	private Long parentId;//所属分类ID
@@ -20,6 +21,7 @@ public class GoodsType implements Serializable{
 	private String keyWord;//关键字，用于查询
 	private String icon;//商品图标
 	private String isLeaf;//是否为最后一级，N表示否，Y表示是
+	private String isShow;//是否显示默认的分类(ID为-1)，N表示否，Y表示是
 	private List<Goods> goodses;//相关的商品
 	
 	public GoodsType() {
@@ -84,5 +86,13 @@ public class GoodsType implements Serializable{
 
 	public void setGoodses(List<Goods> goodses) {
 		this.goodses = goodses;
+	}
+
+	public String isShow() {
+		return isShow;
+	}
+
+	public void setIsShow(String isShow) {
+		this.isShow = isShow;
 	}
 }

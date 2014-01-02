@@ -8,6 +8,8 @@ import java.util.Map;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -33,6 +35,7 @@ import android.widget.Toast;
 import com.zixingchen.discount.R;
 import com.zixingchen.discount.business.GoodsBusiness;
 import com.zixingchen.discount.business.GoodsTypeBusiness;
+import com.zixingchen.discount.common.Contexts;
 import com.zixingchen.discount.common.Page;
 import com.zixingchen.discount.model.Goods;
 import com.zixingchen.discount.model.GoodsType;
@@ -56,6 +59,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	private EditText etSearch;//搜索框
 	private Button btSearchOrBack;//搜索或者返回按钮
 	private InputMethodManager imm;//输入法管理者
+//	public static final List<GoodsType> readyGoodsTypes = new ArrayList<GoodsType>();//准备添加到列表的类型集合，集合的元素由其它页面填充，例如GoodsListActivity的商品关注时填充
 	
 	@Override 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,38 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		
 		//初始化搜索框
 		this.initEtSearch();
+	}
+	
+	/**
+	 * 我的关注列表数据是否有更改，如果有就更新列表
+	 */
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		//我的关注列表数据是否有更改
+		SharedPreferences sp = this.getSharedPreferences(Contexts.SYSTEM_CACHE, MODE_PRIVATE);
+		if(sp.getBoolean(Contexts.HAS_ADD_FOCUS_GOODS, false)){
+			
+			goodsTypes = goodsTypeBusiness.findFocusGoodsTypes();
+			
+			lvMyFocusAdapter adapter = (lvMyFocusAdapter)lvMyFocus.getExpandableListAdapter();
+			adapter.resetIsExpand();
+			adapter.notifyDataSetChanged();
+			
+			//重新展开
+			for (int i = 0; i < goodsTypes.size(); i++) {
+				if(lvMyFocus.isGroupExpanded(i)){
+					lvMyFocus.collapseGroup(i);
+				}
+			}
+			lvMyFocus.expandGroup(0);
+			
+			//重置列表数据更改状态
+			Editor editor = sp.edit();
+			editor.putBoolean(Contexts.HAS_ADD_FOCUS_GOODS,false);
+			editor.commit();
+		}
 	}
 	
 	/**
@@ -136,7 +172,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			String goodsName = etSearch.getText().toString();
 			GoodsType goodsType = new GoodsType();
 			goodsType.setKeyWord(goodsName);
-			goodsType.setId(0L);
+			goodsType.setId(GoodsType.DEFAULT_ID);
 			goodsType.setName(goodsName);
 			Intent intent = new Intent(this,GoodsListActivity.class);
 			intent.putExtra("goodsType", goodsType);
@@ -182,7 +218,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		
 		Map<String, Object> exitMenuItem = new HashMap<String, Object>();
 		exitMenuItem.put("icon", Integer.valueOf(R.drawable.exit_icon));
-		exitMenuItem.put("title", MainActivity.this.getResources().getString(R.string.close));
+		exitMenuItem.put("title", MainActivity.this.getResources().getString(R.string.exit));
 		
 		menuItems.add(addMenuItem);
 		menuItems.add(searchMenuItem);
@@ -234,6 +270,8 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		LinearLayout searchContainer = (LinearLayout) this.findViewById(R.id.searchContainer);
 		searchContainer.setAnimation(AnimationUtils.loadAnimation(this, R.anim.in_from_right));
 		searchContainer.setVisibility(View.VISIBLE);
+		
+		etSearch.setText("");
 	}
 	
 	/**
@@ -285,6 +323,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	public void onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition) {
 		Intent intent = new Intent(this,GoodsDeailActivity.class);
 		intent.putExtra("GoodsItem", goodsTypes.get(groupPosition).getGoodses().get(childPosition));
+		intent.putExtra("prevActivityIsMain", true);
 		this.startActivity(intent);
 	}
 
@@ -331,6 +370,10 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		private boolean[] isExpand;
 		
 		public lvMyFocusAdapter() {
+			resetIsExpand();
+		}
+		
+		public void resetIsExpand(){
 			isExpand = new boolean[getGroupCount()];
 		}
 		
@@ -418,5 +461,13 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		public boolean isChildSelectable(int groupPosition, int childPosition) {
 			return true;
 		}
+	}
+
+	public List<GoodsType> getGoodsTypes() {
+		return goodsTypes;
+	}
+
+	public void setGoodsTypes(List<GoodsType> goodsTypes) {
+		this.goodsTypes = goodsTypes;
 	}
 }
