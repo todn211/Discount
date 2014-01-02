@@ -93,19 +93,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		SharedPreferences sp = this.getSharedPreferences(Contexts.SYSTEM_CACHE, MODE_PRIVATE);
 		if(sp.getBoolean(Contexts.HAS_ADD_FOCUS_GOODS, false)){
 			
-			goodsTypes = goodsTypeBusiness.findFocusGoodsTypes();
-			
-			lvMyFocusAdapter adapter = (lvMyFocusAdapter)lvMyFocus.getExpandableListAdapter();
-			adapter.resetIsExpand();
-			adapter.notifyDataSetChanged();
-			
-			//重新展开
-			for (int i = 0; i < goodsTypes.size(); i++) {
-				if(lvMyFocus.isGroupExpanded(i)){
-					lvMyFocus.collapseGroup(i);
-				}
-			}
-			lvMyFocus.expandGroup(0);
+			this.onBtRefreshClick(null);
 			
 			//重置列表数据更改状态
 			Editor editor = sp.edit();
@@ -252,7 +240,19 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 * @param view
 	 */
 	public void onBtRefreshClick(View view){
+		goodsTypes = goodsTypeBusiness.findFocusGoodsTypes();
 		
+		lvMyFocusAdapter adapter = (lvMyFocusAdapter)lvMyFocus.getExpandableListAdapter();
+		adapter.resetIsExpand();
+		adapter.notifyDataSetChanged();
+		
+		//重新展开
+		for (int i = 0; i < goodsTypes.size(); i++) {
+			if(lvMyFocus.isGroupExpanded(i)){
+				lvMyFocus.collapseGroup(i);
+			}
+		}
+		lvMyFocus.expandGroup(0);
 	}
 	
 	/**

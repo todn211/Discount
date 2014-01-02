@@ -27,7 +27,7 @@
 	            android:layout_height="wrap_content"
 	            style="@style/cornersButton"
 	            android:text="@string/refresh"
-	            android:drawableLeft="@drawable/search_icon"
+	            android:drawableLeft="@drawable/refresh_icon"
 	            android:drawablePadding="5dp"
 	            android:onClick="onBtRefreshClick"/>
 	            
