@@ -129,6 +129,7 @@ public class GoodsTypeDao {
 					String isLeaf = cursor.getString(cursor.getColumnIndex("IS_LEAF"));
 					
 					GoodsType goodsType = new GoodsType(id,parentId,name,typeCode,keyWord,isLeaf);
+					goodsType.setGoodses(new ArrayList<Goods>());
 					goodsTypes.add(goodsType);
 				}
 			}

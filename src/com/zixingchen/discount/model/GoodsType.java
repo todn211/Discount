@@ -23,6 +23,7 @@ public class GoodsType implements Serializable{
 	private String isLeaf;//是否为最后一级，N表示否，Y表示是
 	private String isShow;//是否显示默认的分类(ID为-1)，N表示否，Y表示是
 	private List<Goods> goodses;//相关的商品
+	private boolean hasExpand;//该组是否被展开过
 	
 	public GoodsType() {
 		
@@ -94,5 +95,13 @@ public class GoodsType implements Serializable{
 
 	public void setIsShow(String isShow) {
 		this.isShow = isShow;
+	}
+
+	public boolean getHasExpand() {
+		return hasExpand;
+	}
+
+	public void setHasExpand(boolean hasExpand) {
+		this.hasExpand = hasExpand;
 	}
 }

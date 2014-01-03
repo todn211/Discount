@@ -84,6 +84,13 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 			Editor editor = sp.edit();
 			editor.putBoolean(Contexts.HAS_ADD_FOCUS_GOODS,true);
 			editor.commit();
+			
+			//把当前新关注的商品添加到主页关注列表中
+			goodsType.getGoodses().add(goods);
+			if(!MainActivity.readyGoodsTypes.contains(goodsType)){
+				MainActivity.readyGoodsTypes.add(goodsType);
+				goodsType.setHasExpand(true);
+			}
 		}else{
 			Toast.makeText(this, "关注商品失败！", Toast.LENGTH_SHORT).show();
 		}
@@ -96,6 +103,7 @@ public class GoodsListActivity extends Activity implements OnItemClickListener{
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Intent intent = new Intent(this,GoodsDeailActivity.class);
 		intent.putExtra("GoodsItem", adapter.getDatas().get(position));
+		intent.putExtra("goodsType", goodsType);
 		this.startActivity(intent);
 	}
 	

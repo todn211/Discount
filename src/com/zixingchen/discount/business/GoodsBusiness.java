@@ -233,6 +233,7 @@ public class GoodsBusiness {
 			goods.setGoodsTypeId(goodsTypeId);
 			goods.setName(goodsItem.getString("tip"));
 			goods.setCurrentPrice(Float.parseFloat(goodsItem.getString("currentPrice")));
+			goods.setPrePrice(goods.getCurrentPrice());
 			goods.setIcon(goodsItem.getString("image") + "_sum.jpg");
 			goods.setHref(goodsItem.getString("href"));
 			goodses.add(goods);

@@ -31,6 +31,7 @@ public class GoodsDeailActivity extends Activity {
 	
 	private WebView wvGoodsDetail;//显示商品详细信息的容器
 	private Goods goods;//当前商品对象
+	private GoodsType goodsType;//所属商品类型对象
 	private RelativeLayout llShade;//遮罩层
 	private boolean prevActivityIsMain;//上一个Activity是否为MainActivity，true时为是。
 	private GoodsBusiness bussiness = new GoodsBusiness();
@@ -42,8 +43,13 @@ public class GoodsDeailActivity extends Activity {
 		
 		prevActivityIsMain = this.getIntent().getBooleanExtra("prevActivityIsMain", false);
 		
+		Intent intent = this.getIntent();
+		
+		//初始化商品类型对象
+		goodsType = (GoodsType) intent.getSerializableExtra("goodsType");
+		
 		//获取商品对象
-		goods = (Goods) this.getIntent().getSerializableExtra("GoodsItem");
+		goods = (Goods) intent.getSerializableExtra("GoodsItem");
 		
 		//初始工具栏
 		initToolbar();
@@ -135,6 +141,13 @@ public class GoodsDeailActivity extends Activity {
 			Editor editor = sp.edit();
 			editor.putBoolean(Contexts.HAS_ADD_FOCUS_GOODS,true);
 			editor.commit();
+			
+			//把当前新关注的商品添加到主页关注列表中
+			goodsType.getGoodses().add(goods);
+			if(!MainActivity.readyGoodsTypes.contains(goodsType)){
+				MainActivity.readyGoodsTypes.add(goodsType);
+				goodsType.setHasExpand(true);
+			}
 		}else{
 			Toast.makeText(this, "关注商品失败！", Toast.LENGTH_SHORT).show();
 		}
