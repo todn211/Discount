@@ -9,7 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+
 import com.zixingchen.discount.R;
 
 /**
@@ -20,7 +22,7 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 
 	private GestureDetector gestureDetector;
 	private Context context;
-	private Button btDelete;
+	private ImageButton btDelete;
 	private boolean isInterceptEevntToChild = true;//是否拦截事件传递到子控件
 	private ViewGroup moveTarget;//位于顶层的，需要向左移动的容器
 	private int btDeleteWidth;//删除按键的宽度
@@ -56,7 +58,7 @@ public class MyFocusGoodsItemLoyout extends RelativeLayout {
 		super.onFinishInflate();
 		
 		//发布删除事件
-		btDelete = (Button) this.findViewById(R.id.btDelete);
+		btDelete = (ImageButton) this.findViewById(R.id.btDelete);
 		btDelete.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
