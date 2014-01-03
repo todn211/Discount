@@ -182,20 +182,38 @@ public class GoodsBusiness {
 					httpClient.get(TaobaoUtil.createGoodsItemUrl(goods.getId()), new AsyncHttpResponseHandler(){
 						@Override
 						public void onSuccess(String response) {
-							String price = response.substring(response.indexOf("<strong class=\"oran\">")+21, response.indexOf("</strong>"));
+							String str = "<strong class=\"oran\">";
+							String priceStr = response.substring(response.indexOf(str)+str.length(), response.indexOf("</strong>"));
 							Map<String,Object> params = new HashMap<String, Object>();
-							params.put("price", price);
+							params.put("price", priceStr);
 							params.put("textView", textView);
 							params.put("goods", goods);
 							Message msg = Message.obtain();
 							msg.obj = params;
 							msg.what = INIT_PRICE;
 							handler.sendMessage(msg);
+							
+							//如果当前价格和数据表的不一至，就把当前价格更新到数据表中，作为下一次是否降价的参考
+							float price = 0;
+							if(priceStr.indexOf("-") != -1){
+								String[] priceStrs = priceStr.split("-");
+								price = Float.parseFloat(priceStrs[0].trim());
+							}else{
+								price = Float.parseFloat(priceStr.trim());
+							}
+							
+							if(goods.getPrePrice().floatValue() != price){
+								Goods newGoods = new Goods(goods.getId());
+								newGoods.setCurrentPrice(price);
+								goodsDao.updateFocusGoodsPrice(newGoods);
+							}
 						}
 						
 						@Override
 						public void onFailure(Throwable arg0, String arg1) {
-							System.out.println(arg0.getMessage());
+							Message msg = Message.obtain();
+							msg.what = GoodsBusiness.FIND_GOODS_FAILURE;
+							handler.sendMessage(msg);
 						}
 					});
 				} catch (Exception e) {

@@ -84,6 +84,33 @@ private DBHelp dbHelp;
 	}
 	
 	/**
+	 * 更新关注的商品价格
+	 * @param goods 要更新的商品对象
+	 * @return 成功更新时返回true
+	 */
+	public boolean updateFocusGoodsPrice(Goods goods){
+		SQLiteDatabase db = dbHelp.getWritableDatabase();
+		try {
+			db.beginTransaction();
+			ContentValues values = new ContentValues();
+			values.put("PRICE", goods.getCurrentPrice());
+			int result = db.update("focus_goods", values, "id=?", new String[]{String.valueOf(goods.getId())});
+			db.setTransactionSuccessful();
+			
+			if(result != 0)
+				return true;
+			else
+				return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally{
+			db.endTransaction();
+			db.close();
+		}
+		return false;
+	}
+	
+	/**
 	 * 搜索关注的商品对象
 	 * @param filter 过滤条件(可过滤的属性：name、id、goodsTypeId)
 	 * @return 商品对象集合

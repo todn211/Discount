@@ -11,8 +11,8 @@ public class Goods implements Serializable{
 	
 	private Long id;
 	private Long goodsTypeId;//所属分类ID
-	private float prePrice;//商品价格
-	private float currentPrice;//当前价格
+	private Float prePrice;//商品价格
+	private Float currentPrice;//当前价格
 	private String name;//商品名
 	private String subTitle;//商品子标题
 	private String descript;//商品说明
@@ -39,19 +39,19 @@ public class Goods implements Serializable{
 		this.goodsTypeId = goodsTypeId;
 	}
 
-	public float getPrePrice() {
+	public Float getPrePrice() {
 		return prePrice;
 	}
 
-	public void setPrePrice(float prePrice) {
+	public void setPrePrice(Float prePrice) {
 		this.prePrice = prePrice;
 	}
 
-	public float getCurrentPrice() {
+	public Float getCurrentPrice() {
 		return currentPrice;
 	}
 
-	public void setCurrentPrice(float currentPrice) {
+	public void setCurrentPrice(Float currentPrice) {
 		this.currentPrice = currentPrice;
 	}
 
