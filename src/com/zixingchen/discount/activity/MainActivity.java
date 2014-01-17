@@ -1,15 +1,13 @@
 package com.zixingchen.discount.activity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,6 +16,7 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -29,6 +28,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +44,11 @@ import com.zixingchen.discount.widgetex.ExpandableListViewSuper.ExpandableListVi
 import com.zixingchen.discount.widgetex.ExpandableListViewSuper.MyFocusGoodsItemLoyout;
 import com.zixingchen.discount.widgetex.ExpandableListViewSuper.OnChildOperationListener;
 import com.zixingchen.discount.widgetex.PopupWindowSuper.PopupMenuWindow;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 主页
@@ -69,7 +74,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		goodsTypeBusiness = new GoodsTypeBusiness();
 		goodsBusiness = new GoodsBusiness();
 		
-		//初化//输入法管理者
+		//初化输入法管理者
 		imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		
 		//初始化关注列表 
@@ -80,6 +85,16 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		
 		//初始化搜索框
 		this.initEtSearch();
+
+//        //进度条调试
+//        Dialog progressDialog =  new Dialog(this,R.style.progress_dialog);
+//        View v = this.getLayoutInflater().inflate(R.layout.progressbar_dialog,null);// 得到加载view
+//        View ivLoading = v.findViewById(R.id.ivLoading);
+//        ivLoading.setAnimation(AnimationUtils.loadAnimation(this, R.anim.loading_animation));
+//        progressDialog.setContentView(v,new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.WRAP_CONTENT,
+//                LinearLayout.LayoutParams.WRAP_CONTENT));
+//        progressDialog.show();
 	}
 	
 	/**
@@ -88,7 +103,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	@Override
 	protected void onStart() {
 		super.onStart();
-		
+
 		//我的关注列表数据是否有更改
 		SharedPreferences sp = this.getSharedPreferences(Contexts.SYSTEM_CACHE, MODE_PRIVATE);
 		if(sp.getBoolean(Contexts.HAS_ADD_FOCUS_GOODS, false)){
@@ -208,12 +223,11 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		//获取弹出窗口的坐标
 		int[] point = new int[2];
 		view.getLocationOnScreen(point);
-		int x = point[0] + view.getWidth() / 2;
+		int x = -(point[0] + view.getWidth() / 2);
 		int y = point[1] + view.getHeight();
-		
-		
-		popupMenuWindow.showAtLocation(findViewById(android.R.id.content) , Gravity.LEFT | Gravity.TOP, x, y);
-	}
+
+		popupMenuWindow.showAtLocation(findViewById(android.R.id.content) , Gravity.RIGHT | Gravity.TOP, x, y);
+    }
 	
 	/**
 	 * 初始化更多菜单窗口
@@ -221,7 +235,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	public void initPopupMenuWindow(){
 		List<Map<String, Object>> menuItems = new ArrayList<Map<String,Object>>();
 		Map<String, Object> addMenuItem = new HashMap<String, Object>();
-		addMenuItem.put("icon", Integer.valueOf(R.drawable.add_icon));
+		addMenuItem.put("icon", R.drawable.add_icon);
 		addMenuItem.put("title", MainActivity.this.getResources().getString(R.string.add));
 		
 		Map<String, Object> searchMenuItem = new HashMap<String, Object>();
@@ -235,7 +249,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 		Map<String, Object> exitMenuItem = new HashMap<String, Object>();
 		exitMenuItem.put("icon", Integer.valueOf(R.drawable.exit_icon));
 		exitMenuItem.put("title", MainActivity.this.getResources().getString(R.string.exit));
-		
+
 		menuItems.add(addMenuItem);
 		menuItems.add(searchMenuItem);
 		menuItems.add(settingsMenuItem);
@@ -269,17 +283,17 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	 */
 	public void onBtRefreshClick(View view){
 		goodsTypes = goodsTypeBusiness.findFocusGoodsTypes();
-		
+
 		lvMyFocusAdapter adapter = (lvMyFocusAdapter)lvMyFocus.getExpandableListAdapter();
 		adapter.notifyDataSetChanged();
-		
+
 		//重新展开
 		for (int i = 0; i < goodsTypes.size(); i++) {
 			if(lvMyFocus.isGroupExpanded(i)){
 				lvMyFocus.collapseGroup(i);
 			}
 		}
-		
+
 		if(goodsTypes.size() > 0)
 			lvMyFocus.expandGroup(0);
 	}
@@ -313,8 +327,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 	
 	/**
 	 * 跳转到添加商品关注的界面
-	 * @param view
-	 */
+     */
 	private void showGoodsTypeActivity(){
 		Intent intent = new Intent(this,GoodsTypeActivity.class);
 		intent.putExtra("prevActivityIsMain", true);
@@ -458,7 +471,7 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			myFocusGoodsItemLoyout.setGroupPosition(groupPosition);
 			myFocusGoodsItemLoyout.setChildPosition(childPosition);
 			myFocusGoodsItemLoyout.resetViewPosition();
-			
+
 			Goods goods = goodsTypes.get(groupPosition).getGoodses().get(childPosition);
 			
 			TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
@@ -469,11 +482,19 @@ public class MainActivity extends Activity implements OnGroupExpandListener,OnCh
 			
 			//加载当前价格
 			TextView tvCurrentPrice = (TextView) convertView.findViewById(R.id.tvCurrentPrice);
-			if(TextUtils.isEmpty(goods.getPriceCache())){
+			if(goods.getCurrentPrice() == null){
+                tvCurrentPrice.setText("");
+                tvCurrentPrice.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
 				goodsBusiness.loadGoodsPrice(goods, tvCurrentPrice);
 			}else{
-				tvCurrentPrice.setText(goods.getPriceCache());
-			}
+                if (goods.getPriceState() != Goods.PriceState.EQUATION){
+                    Drawable priceStateIcon = convertView.getResources().getDrawable(goods.getPriceStateIcon());
+                    tvCurrentPrice.setCompoundDrawablesWithIntrinsicBounds(null,null,priceStateIcon,null);
+                }else{
+                    tvCurrentPrice.setCompoundDrawablesWithIntrinsicBounds(null,null,null,null);
+                }
+				tvCurrentPrice.setText("当前价格：" + goods.getCurrentPrice().toString());
+            }
 			
 			//加载当前图标
 			ImageView ivIcon = (ImageView) convertView.findViewById(R.id.ivIcon);

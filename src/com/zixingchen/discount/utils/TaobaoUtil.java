@@ -56,7 +56,7 @@ public abstract class TaobaoUtil {
 	 * @param secret
 	 *            签名密钥
 	 * @return 签名
-	 * @throws IOException
+	 * @throws java.io.IOException
 	 */
 	public static String signTopRequestNew(
 			TreeMap<String, String> sortedParams, String secret)
@@ -179,7 +179,7 @@ public abstract class TaobaoUtil {
 	 * @param parameters 要发送到淘宝的参数
 	 * @param session 用户登录的session
 	 * @return 按淘宝指定格式进行排序和加密的参数对象
-	 * @throws IOException
+	 * @throws java.io.IOException
 	 */
    public static RequestParams createApiParams(Map<String,String> parameters, String session) throws IOException {
 		TreeMap<String, String> params = new TreeMap<String, String>();

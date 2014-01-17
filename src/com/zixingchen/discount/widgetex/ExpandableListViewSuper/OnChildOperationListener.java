@@ -16,7 +16,7 @@ public interface OnChildOperationListener {
 	 * @param groupPosition 元素所在的组索引
 	 * @param childPosition 元素索引
 	 */
-	public void onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition);
+	public void onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition);
 	
 	/**
 	 * 子元素删除事件
@@ -25,5 +25,5 @@ public interface OnChildOperationListener {
 	 * @param groupPosition 元素所在的组索引
 	 * @param childPosition 元素索引
 	 */
-	public void onChildDelete(ExpandableListView parent, View v,int groupPosition, int childPosition);
+	public void onChildDelete(ExpandableListView parent, View v, int groupPosition, int childPosition);
 }

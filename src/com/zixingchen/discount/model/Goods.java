@@ -18,7 +18,27 @@ public class Goods implements Serializable{
 	private String descript;//商品说明
 	private String icon;//图标
 	private String href;//商品的URL
-	private String priceCache;//价格缓存，为节省关注列表的网络请求
+    private PriceState priceState;//价格状态
+    private Integer priceStateIcon;//价格状态图标
+
+    /**
+     * 价格状态
+     */
+    public static enum PriceState{
+        /**
+         * 升价
+         */
+        UP,
+        /**
+         * 降价
+         */
+        DOWN,
+
+        /**
+         * 不变
+         */
+        EQUATION
+    }
 
 	public Goods() {
 	}
@@ -103,11 +123,19 @@ public class Goods implements Serializable{
 		this.href = href;
 	}
 
-	public String getPriceCache() {
-		return priceCache;
-	}
+    public PriceState getPriceState() {
+        return priceState;
+    }
 
-	public void setPriceCache(String priceCache) {
-		this.priceCache = priceCache;
-	}
+    public void setPriceState(PriceState priceState) {
+        this.priceState = priceState;
+    }
+
+    public Integer getPriceStateIcon() {
+        return priceStateIcon;
+    }
+
+    public void setPriceStateIcon(Integer priceStateIcon) {
+        this.priceStateIcon = priceStateIcon;
+    }
 }
